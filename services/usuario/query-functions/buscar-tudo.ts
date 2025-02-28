@@ -9,6 +9,7 @@ export async function FetchBuscarTudo(
 	permissao: string = '',
 ) {
 	const baseURL = process.env.API_URL;
+	console.log(baseURL);
 	try {
 		const usuarios = await fetch(`${baseURL}usuarios/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}&status=${status}&permissao=${permissao}`, {
 			method: 'GET',

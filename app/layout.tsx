@@ -14,8 +14,8 @@ import { Toaster } from "@/components/ui/sonner";
 // });
 
 export const metadata: Metadata = {
-  title: "SISPEUC - Consulta de Processos",
-  description: "Consulta de processos gerais",
+  title: "Outorga Onerosa - Relatórios",
+  description: "Relatórios de Outorga Onerosa.",
 };
 
 export default function RootLayout({

@@ -28,9 +28,9 @@ export function AppSidebar({ data, props }: { data: { menuUsuario: IMenu[], menu
                 <MiniLogo />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">
-                        SISPEUC
+                        Outorga Onerosa
                     </span>
-                    <span className="truncate text-xs">Consulta de processos</span>
+                    <span className="truncate text-xs">Relatórios</span>
                 </div>
                 <ArrowLeftFromLineIcon />
             </SidebarMenuButton>
