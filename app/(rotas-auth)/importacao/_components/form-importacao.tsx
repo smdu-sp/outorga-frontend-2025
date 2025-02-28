@@ -152,11 +152,11 @@ export default function FormImportacao() {
             if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento });            
         }
         console.log(processos);
-        // if (processos.length > 0) {
-        //     console.log(processos);
-        //     const { ok, error, data, status } = await CriarProcessos(processos);
-        //     console.log({ ok, error, data, status });
-        // }
+        if (processos.length > 0) {
+            // console.log(processos);
+            const { ok, error, data, status } = await CriarProcessos(processos);
+            console.log({ ok, error, data, status });
+        }
         // console.log(linhasEmPagamentoDPD);
     }
 
