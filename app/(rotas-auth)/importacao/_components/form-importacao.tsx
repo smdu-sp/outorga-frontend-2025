@@ -76,49 +76,74 @@ export default function FormImportacao() {
     async function planilhaAD(wb: xlsx.WorkBook) {
         const emPagamentoDPD = wb.Sheets[wb.SheetNames[1]];
         const quitadoDPD = wb.Sheets[wb.SheetNames[2]];
+        const quebraDPD = wb.Sheets[wb.SheetNames[3]];
         const linhasEmPagamentoDPD = xlsx.utils.sheet_to_json(emPagamentoDPD, { header: 1 });
         const linhasQuitadoDPD = xlsx.utils.sheet_to_json(quitadoDPD, { header: 1 });
+        const linhasQuebraDPD = xlsx.utils.sheet_to_json(quebraDPD, { header: 1 });
         if (linhasEmPagamentoDPD.length <= 0) toast("Lista vazia.");
         var processos: IProcesso[] = [];
         var processo: IProcesso | undefined;
         for (const index in linhasEmPagamentoDPD) {
-            if (+index > 0) {
-                const linhaParcela: any = linhasEmPagamentoDPD[index];
+            // if (+index > 0) {
+            //     const linhaParcela: any = linhasEmPagamentoDPD[index];
 
-                const tipo = linhaParcela[1] ? linhaParcela[1] === "PDE" ? "PDE" : "COTA" : undefined;
-                const data_entrada = linhaParcela[0] ? new Date(Date.UTC(0, 0, linhaParcela[0])) : undefined;
-                const protocolo_ad = linhaParcela[2] || undefined;
-                const num_processo = linhaParcela[3] || undefined;
-                const cpf_cnpj = linhaParcela[4] || undefined;
+            //     const tipo = linhaParcela[1] ? linhaParcela[1] === "PDE" ? "PDE" : "COTA" : undefined;
+            //     const data_entrada = linhaParcela[0] ? new Date(Date.UTC(0, 0, linhaParcela[0])) : undefined;
+            //     const protocolo_ad = linhaParcela[2] || undefined;
+            //     const num_processo = linhaParcela[3] || undefined;
+            //     const cpf_cnpj = linhaParcela[4] || undefined;
 
-                const num_parcela = +linhaParcela[5];
-                const status_quitacao = linhaParcela[9] === "Pago";
-                const valor = typeof linhaParcela[7] === "string" ? +linhaParcela[7].replace(".", "").replace(",", ".").replace("R$", "").trim() : linhaParcela[7];
-                const vencimento = new Date(Date.UTC(0, 0, linhaParcela[6]));
-                const ano_pagamento = (linhaParcela[8] && linhaParcela[8] !== "") ? +linhaParcela[8] : undefined;
+            //     const num_parcela = +linhaParcela[5];
+            //     const status_quitacao = linhaParcela[9] === "Pago";
+            //     const valor = typeof linhaParcela[7] === "string" ? +linhaParcela[7].replace(".", "").replace(",", ".").replace("R$", "").trim() : linhaParcela[7];
+            //     const vencimento = new Date(Date.UTC(0, 0, linhaParcela[6]));
+            //     const ano_pagamento = (linhaParcela[8] && linhaParcela[8] !== "") ? +linhaParcela[8] : undefined;
 
-                if (num_parcela === 1 && data_entrada) {
-                    if (processo) processos.push(processo);
-                    processo = { tipo, data_entrada, protocolo_ad, num_processo, cpf_cnpj, parcelas: [] }
-                }
-                if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento });
-            }
+            //     if (num_parcela === 1 && data_entrada) {
+            //         if (processo) processos.push(processo);
+            //         processo = { tipo, data_entrada, protocolo_ad, num_processo, cpf_cnpj, parcelas: [] }
+            //     }
+            //     if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento });
+            // }
         }
         processo = undefined;
         for (const linha of linhasQuitadoDPD) {
-            const linhaParcela: any = linha;
+            // const linhaParcela: any = linha;
 
-            const tipo = linhaParcela[1] ? linhaParcela[1] === "PDE" ? "PDE" : "COTA" : undefined;
+            // const tipo = linhaParcela[1] ? linhaParcela[1] === "PDE" ? "PDE" : "COTA" : undefined;
+            // const data_entrada = linhaParcela[0] ? new Date(Date.UTC(0, 0, linhaParcela[0])) : undefined;
+            // const protocolo_ad = linhaParcela[2] || undefined;
+            // const num_processo = linhaParcela[3] || undefined;
+            // const cpf_cnpj = linhaParcela[4] || undefined;
+
+            // const num_parcela = +linhaParcela[5];
+            // const status_quitacao = linhaParcela[9] === "Pago" || linhaParcela[9] === "Quitado";
+            // const valor = typeof linhaParcela[7] === "string" ? +linhaParcela[7].replace(".", "").replace(",", ".").replace("R$", "").trim() : linhaParcela[7];
+            // const vencimento = new Date(Date.UTC(0, 0, linhaParcela[6]));
+            // const ano_pagamento = vencimento ? vencimento.getFullYear() : undefined;
+
+            // if (num_parcela === 1 && data_entrada) {
+            //     if (processo) processos.push(processo);
+            //     processo = { tipo, data_entrada, protocolo_ad, num_processo, cpf_cnpj, parcelas: [] }
+            // }
+            // if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento });            
+        }
+        processo = undefined;
+        for (const linha of linhasQuebraDPD) {
+            const linhaParcela: any = linha;
+            // console.log(linhaParcela);
+
             const data_entrada = linhaParcela[0] ? new Date(Date.UTC(0, 0, linhaParcela[0])) : undefined;
+            const tipo = linhaParcela[1] ? linhaParcela[1] === "PDE" ? "PDE" : "COTA" : undefined;
             const protocolo_ad = linhaParcela[2] || undefined;
             const num_processo = linhaParcela[3] || undefined;
             const cpf_cnpj = linhaParcela[4] || undefined;
 
             const num_parcela = +linhaParcela[5];
-            const status_quitacao = linhaParcela[9] === "Pago" || linhaParcela[9] === "Quitado";
-            const valor = typeof linhaParcela[7] === "string" ? +linhaParcela[7].replace(".", "").replace(",", ".").replace("R$", "").trim() : linhaParcela[7];
             const vencimento = new Date(Date.UTC(0, 0, linhaParcela[6]));
-            const ano_pagamento = vencimento ? vencimento.getFullYear() : undefined;
+            const valor = typeof linhaParcela[7] === "string" ? +linhaParcela[7].replace(".", "").replace(",", ".").replace("R$", "").trim() : linhaParcela[7];
+            const ano_pagamento = linhaParcela[8] && linhaParcela[8] !== "" && linhaParcela[8] !== "N" && linhaParcela[8] !== "S" ? +linhaParcela[8] : vencimento ? vencimento.getFullYear() : undefined;
+            const status_quitacao = (linhaParcela[9] && linhaParcela[9] !== "") ? linhaParcela[9].trim() === "Pago" || linhaParcela[9].trim() === "Quitado" : false;
 
             if (num_parcela === 1 && data_entrada) {
                 if (processo) processos.push(processo);
@@ -126,11 +151,12 @@ export default function FormImportacao() {
             }
             if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento });            
         }
-        if (processos.length > 0) {
-            console.log(processos);
-            const { ok, error, data, status } = await CriarProcessos(processos);
-            console.log({ ok, error, data, status });
-        }
+        console.log(processos);
+        // if (processos.length > 0) {
+        //     console.log(processos);
+        //     const { ok, error, data, status } = await CriarProcessos(processos);
+        //     console.log({ ok, error, data, status });
+        // }
         // console.log(linhasEmPagamentoDPD);
     }
 
