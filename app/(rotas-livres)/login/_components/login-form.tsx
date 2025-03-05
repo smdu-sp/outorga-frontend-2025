@@ -48,7 +48,6 @@ export function LoginForm() {
 
 	async function onSubmit({ login, senha }: z.infer<typeof formSchema>) {
 		try {
-			console.log({ login, senha });
 			signIn('credentials', { login, senha }).then(
 				(value) => {
 					console.log(value);

@@ -17,11 +17,11 @@ export type IParcela = {
 
 export type IProcesso = {
 	id: string;
-	tipo?: ITipoProcesso;
-	codigo: string;
+	tipo?: ['PDE', 'COTA'];
+	codigo?: string;
 	num_processo: string;
-	protocolo_ad: string;
-	cpf_cnpj: string;
-	data_entrada: Date;
-	parcelas: IParcela[];
+	protocolo_ad?: string;
+	cpf_cnpj?: string;
+	data_entrada?: Date;
+	parcelas?: IParcela[];
 };
