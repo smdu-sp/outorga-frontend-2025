@@ -80,10 +80,11 @@ export default function FormImportacao() {
         const linhasQuitadoDPD = xlsx.utils.sheet_to_json(quitadoDPD, { header: 1 });
         const linhasQuebraDPD = xlsx.utils.sheet_to_json(quebraDPD, { header: 1 });
         const linhasPagamentoAVistaDPCI = xlsx.utils.sheet_to_json(pagamentoAVistaDPCI, { header: 1 });
-        var processos: IProcesso[] = [];
-        var processo: IProcesso | undefined;
+        const processos: IProcesso[] = [];
+        let processo: IProcesso | undefined;
         for (const index in linhasEmPagamentoDPD) {
             if (+index > 0) {
+                //eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const linhaParcela: any = linhasEmPagamentoDPD[index];
 
                 const tipo = linhaParcela[1] ? linhaParcela[1] === "PDE" ? "PDE" : "COTA" : undefined;
@@ -108,6 +109,7 @@ export default function FormImportacao() {
         if (processo) processos.push(processo);
         processo = undefined;
         for (const linha of linhasQuitadoDPD) {
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
             const linhaParcela: any = linha;
 
             const tipo = linhaParcela[1] ? linhaParcela[1] === "PDE" ? "PDE" : "COTA" : undefined;
@@ -131,6 +133,7 @@ export default function FormImportacao() {
         if (processo) processos.push(processo);
         processo = undefined;
         for (const linha of linhasQuebraDPD) {
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
             const linhaParcela: any = linha;
 
             const data_entrada = linhaParcela[0] ? new Date(Date.UTC(0, 0, linhaParcela[0])) : undefined;
@@ -154,6 +157,7 @@ export default function FormImportacao() {
         if (processo) processos.push(processo);
         processo = undefined;
         for (const linha of linhasPagamentoAVistaDPCI) {
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
             const linhaParcela: any = linha;
 
             const data_entrada = linhaParcela[0] ? new Date(Date.UTC(0, 0, linhaParcela[0])) : undefined;
@@ -177,7 +181,7 @@ export default function FormImportacao() {
         if (processo) processos.push(processo);
         processo = undefined;
         if (processos.length > 0) {
-            const { ok, error, data, status } = await CriarProcessos(processos);
+            await CriarProcessos(processos);
         }
     }
 

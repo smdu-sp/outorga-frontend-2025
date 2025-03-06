@@ -1,5 +1,7 @@
 /** @format */
 
+import { IRespostaUsuario } from "@/types/usuario";
+
 export async function FetchBuscarTudo(
 	access_token: string,
 	pagina: number = 1,
@@ -7,7 +9,7 @@ export async function FetchBuscarTudo(
 	busca: string = '',
 	status: string = '',
 	permissao: string = '',
-) {
+): Promise<IRespostaUsuario> {
 	const baseURL = process.env.API_URL;
 	try {
 		const usuarios = await fetch(`${baseURL}usuarios/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}&status=${status}&permissao=${permissao}`, {

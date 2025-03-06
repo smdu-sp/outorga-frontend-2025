@@ -6,6 +6,7 @@ export interface IUsuario {
 	login: string;
 	email: string;
 	permissao: string;
+	avatar?: string;
 	status: boolean;
 	ultimologin: Date;
 	criadoEm: Date;

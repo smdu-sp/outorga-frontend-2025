@@ -50,7 +50,7 @@ export default function ModalProcessos({ processo }: { processo: IProcesso }) {
 								Parcelas
 							</AccordionTrigger>
 							<AccordionContent className='grid grid-cols-2 gap-5'>
-								{processo.parcelas.map((item, index) => {
+								{processo && processo.parcelas && processo.parcelas.map((item, index) => {
 									return (
 										<ul key={index}>
 											<li>Número da Parcela: {item.num_parcela}</li>

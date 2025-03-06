@@ -5,6 +5,7 @@ export default function Importacao() {
     return <Card className='mt-10'>
         <CardHeader>
             <CardTitle className='text-4xl font-bold'>Importação</CardTitle>
+            <CardDescription className='hidden'>Importação</CardDescription>
         </CardHeader>
         <CardContent className='flex flex-col gap-10'>
             <FormImportacao />

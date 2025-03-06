@@ -1,7 +1,4 @@
-'use client'
-
-import DataTable from '@/components/data-table';
-import { useEffect, useState } from 'react';
+import DataTable, { TableSkeleton } from '@/components/data-table';
 import {
 	Card,
 	CardContent,
@@ -10,46 +7,44 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import Report from './_components/report';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { IProcesso } from '@/types/processo';
 import { columns } from './_components/columns';
-import { buscarTudo, IProcessosPaginado } from '@/services/processos/query-functions/buscar-tudo';
-import { toast } from 'sonner';
+import { buscarTudo } from '@/services/processos/query-functions/buscar-tudo';
 import Pagination from '@/components/pagination';
+import { Suspense } from 'react';
 
-export default function Home() {
-	const router = useRouter();
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
-	const [dataProcessos, setDataProcessos] = useState<IProcesso[]>([]);
+export default function HomeSuspense({
+	searchParams,
+}: {
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+	return (
+		<Suspense fallback={<TableSkeleton />}>
+			<Home searchParams={searchParams} />
+		</Suspense>
+	)	
+}
 
-	function atualizaParametros(pagina: number, limite: number, busca: string, total: number) {
-		const params = new URLSearchParams(searchParams.toString())
-		params.set('busca', busca);
-		params.set('pagina', String(pagina));
-		params.set('limite', String(limite));
-		params.set('total', String(total));
-		router.push(pathname + '?' + params.toString());
+async function Home({
+	searchParams,
+}: {
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+	let { pagina = 1, limite = 10, total = 0 } = await searchParams;
+	let ok = false;
+	const { busca = '' } = await searchParams;
+	let dataProcessos: IProcesso[] = [];
+	const response = await buscarTudo('', +pagina, +limite, busca as string);
+	const { data } = response;
+	ok = response.ok;
+	if (ok) {
+		if (data) {
+			pagina = data.pagina || 1;
+			limite = data.limite || 10;
+			total = data.total || 0;
+			dataProcessos = data.data || [];
+		}
 	}
-
-	function retornaData() {
-		const busca = searchParams.get('busca') || '';
-		const pagina = +(searchParams.get('pagina') || 1);
-		const limite = +(searchParams.get('limite') || 10);
-		buscarTudo('', pagina, limite, busca).then(({ ok, error, data }) => {
-			if (!ok) toast.error(error || 'Ocorreu um erro ao buscar os processos.');
-			if (ok) {
-				const { limite, pagina, total, data: processos } = data as IProcessosPaginado;
-				atualizaParametros(pagina, limite, busca, total);
-				setDataProcessos(processos || []);
-				console.log(processos);
-			}
-		})
-	}
-
-	useEffect(() => {
-		retornaData();
-	}, [searchParams]);
 
 	return (
 		<Card>
@@ -61,11 +56,11 @@ export default function Home() {
 			</CardHeader>
 			<CardContent className='flex flex-col gap-10'>
 				<Report />
-				<DataTable
+				{dataProcessos && <DataTable
 					columns={columns}
 					data={dataProcessos || []}
-				/>
-				<Pagination />
+				/>}
+				{dataProcessos && dataProcessos.length > 0 && <Pagination total={+total} limite={+limite} pagina={+pagina} />}
 			</CardContent>
 		</Card>
 	);

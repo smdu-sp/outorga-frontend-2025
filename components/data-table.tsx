@@ -75,5 +75,5 @@ export default function DataTable<TData, TValue>({
 }
 
 export function TableSkeleton() {
-    return <Skeleton className="h-120 w-full rounded-xl" />
+    return <Skeleton className="h-240 w-full rounded-xl" />
 }
