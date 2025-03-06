@@ -34,7 +34,7 @@ async function Home({
 	let ok = false;
 	const { busca = '' } = await searchParams;
 	let dataProcessos: IProcesso[] = [];
-	const response = await buscarTudo(+pagina, +limite);
+	const response = await buscarTudo(+pagina, +limite, busca as string);
 	const { data } = response;
 	ok = response.ok;
 	if (ok) {
