@@ -36,7 +36,7 @@ export default function Pagination(props: { total: number, pagina: number, limit
         params.set('pagina', String(pagina));
         params.set('limite', String(limite));
         params.set('total', String(total));
-        router.push(pathname + '?' + params.toString());
+        router.push(pathname + '?' + params.toString(), { scroll: false });
 
         props.success && toast.success("Lista atualizada!");
 
