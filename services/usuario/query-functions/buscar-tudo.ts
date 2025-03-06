@@ -1,6 +1,6 @@
 /** @format */
 
-import { IRespostaUsuario } from "@/types/usuario";
+import { IRespostaUsuario } from '@/types/usuario';
 
 export async function FetchBuscarTudo(
 	access_token: string,
@@ -10,15 +10,19 @@ export async function FetchBuscarTudo(
 	status: string = '',
 	permissao: string = '',
 ): Promise<IRespostaUsuario> {
-	const baseURL = process.env.API_URL;
+	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 	try {
-		const usuarios = await fetch(`${baseURL}usuarios/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}&status=${status}&permissao=${permissao}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${access_token}`,
+		const usuarios = await fetch(
+			`${baseURL}usuarios/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}&status=${status}&permissao=${permissao}`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${access_token}`,
+				},
+				next: { tags: ['users'], revalidate:120 },
 			},
-		});
+		);
 		const data = await usuarios.json();
 		if (usuarios.status === 200)
 			return {

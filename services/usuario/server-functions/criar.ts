@@ -5,12 +5,13 @@
 import { redirect } from 'next/navigation';
 import { ICreateUsuario, IRespostaUsuario } from '../../../types/usuario';
 import { auth } from '@/lib/auth/auth';
+import { revalidateTag } from 'next/cache';
 
 export async function CriarUsuario(
 	data: ICreateUsuario,
 ): Promise<IRespostaUsuario> {
 	const session = await auth();
-	const baseURL = process.env.API_URL;
+	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 	if (!session) redirect('/login');
 	const response: Response = await fetch(`${baseURL}usuarios/criar`, {
@@ -22,13 +23,14 @@ export async function CriarUsuario(
 		body: JSON.stringify(data),
 	});
 	const dataResponse = await response.json();
-	if (response.status === 201)
+	if (response.status === 201){
+		revalidateTag('users');
 		return {
 			ok: true,
 			error: null,
 			data: dataResponse,
 			status: 201,
-		};
+	}};
 	if (!dataResponse)
 		return {
 			ok: false,

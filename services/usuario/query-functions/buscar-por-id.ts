@@ -8,7 +8,7 @@ export async function FetchBuscarPorId(id: string, access_token: string) {
 			data: null,
 			status: 400,
 		};
-	const baseURL = process.env.API_URL;
+	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 	try {
 		const usuarios = await fetch(`${baseURL}usuarios/buscar-por-id/${id}`, {
 			method: 'GET',

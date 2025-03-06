@@ -1,7 +1,7 @@
 /** @format */
 
 export async function FetchValidaUsuario(access_token: string) {
-	const baseURL = process.env.API_URL;
+	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 	try {
 		const usuario = await fetch(`${baseURL}usuarios/valida-usuario`, {
 			method: 'GET',

@@ -3,6 +3,7 @@
 'use server';
 
 import { auth } from '@/lib/auth/auth';
+import { revalidateTag } from 'next/cache';
 
 import { redirect } from 'next/navigation';
 
@@ -10,7 +11,7 @@ export async function AutorizarUsuario(id: string) {
 	const session = await auth();
 	if (!session) redirect('/login');
 
-	const baseURL = process.env.API_URL;
+	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 	const autorizado = await fetch(`${baseURL}usuarios/autorizar/${id}`, {
 		method: 'PATCH',
@@ -22,13 +23,15 @@ export async function AutorizarUsuario(id: string) {
 
 	const dataResponse = await autorizado.json();
 
-	if (autorizado.status === 200)
+	if (autorizado.status === 200) {
+		revalidateTag('users');
 		return {
 			ok: true,
 			error: null,
 			data: dataResponse,
 			status: 200,
 		};
+	}
 	if (!dataResponse)
 		return {
 			ok: false,

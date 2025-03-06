@@ -42,12 +42,12 @@ export interface IRespostaProcesso {
 }
 
 export async function buscarTudo(
-	access_token: string = '',
+
 	pagina: number = 1,
 	limite: number = 10,
 	busca: string = '',
 ): Promise<IRespostaProcesso> {
-	const baseURL = process.env.API_URL;
+	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 	const session = await auth();
 	try {
 		const processos = await fetch(`${baseURL}processos/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}`, {

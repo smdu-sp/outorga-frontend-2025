@@ -17,7 +17,7 @@ export async function CriarProcessos(
 	data: IProcesso[],
 ): Promise<IRespostaProcesso> {
 	const session = await auth();
-	const baseURL = process.env.API_URL;
+	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 	if (!session) redirect('/login');
 	const response: Response = await fetch(`${baseURL}processos/criar`, {

@@ -5,7 +5,7 @@ export interface IUsuario {
 	nome: string;
 	login: string;
 	email: string;
-	permissao: string;
+	permissao: 'USR' | 'DEV' | 'ADM' | 'SUP';
 	avatar?: string;
 	status: boolean;
 	ultimologin: Date;
@@ -17,12 +17,12 @@ export interface ICreateUsuario {
 	nome: string;
 	email: string;
 	login: string;
-	permissao: string;
+	permissao: 'USR' | 'DEV' | 'ADM' | 'SUP';
 }
 
 export interface IUpdateUsuario {
 	id?: string;
-	permissao?: string;
+	permissao?: 'USR' | 'DEV' | 'ADM' | 'SUP';
 	status?: boolean;
 }
 

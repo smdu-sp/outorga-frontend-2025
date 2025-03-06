@@ -9,7 +9,7 @@ export async function FetchBuscarNovo(login: string, access_token: string) {
 			status: 400,
 		};
 
-	const baseURL = process.env.API_URL;
+	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 	try {
 		const usuarioNovo = await fetch(`${baseURL}usuarios/buscar-novo/${login}`, {
 			method: 'GET',

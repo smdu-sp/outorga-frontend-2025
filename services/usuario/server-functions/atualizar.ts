@@ -5,6 +5,7 @@
 import { redirect } from 'next/navigation';
 import { IUpdateUsuario, IRespostaUsuario } from '../../../types/usuario';
 import { auth } from '@/lib/auth/auth';
+import { revalidateTag } from 'next/cache';
 
 export async function AtualizarUsuario(
 	id: string,
@@ -12,8 +13,8 @@ export async function AtualizarUsuario(
 ): Promise<IRespostaUsuario> {
 	const session = await auth();
 	if (!session) redirect('/login');
-	const baseURL = process.env.API_URL;
-  
+	const baseURL = process.env.NEXT_PUBLIC_API_URL;
+
 	const response: Response = await fetch(`${baseURL}usuarios/atualizar/${id}`, {
 		method: 'PATCH',
 		headers: {
@@ -23,13 +24,15 @@ export async function AtualizarUsuario(
 		body: JSON.stringify(data),
 	});
 	const dataResponse = await response.json();
-	if (response.status === 200)
+	if (response.status === 200) {
+		revalidateTag('users');
 		return {
 			ok: true,
 			error: null,
 			data: dataResponse,
 			status: 200,
 		};
+	}
 	if (!dataResponse)
 		return {
 			ok: false,
