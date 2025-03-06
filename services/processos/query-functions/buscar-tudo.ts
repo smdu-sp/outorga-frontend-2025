@@ -42,7 +42,6 @@ export interface IRespostaProcesso {
 }
 
 export async function buscarTudo(
-
 	pagina: number = 1,
 	limite: number = 10,
 	busca: string = '',
