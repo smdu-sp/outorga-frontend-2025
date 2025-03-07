@@ -39,3 +39,15 @@ export interface IRespostaUsuario {
 	data: IUsuario | IPaginadoUsuario | null;
 	status: number;
 }
+
+export interface IUsuarioSession {
+	sub: string
+	nome: string
+	login: string
+	email: string
+	permissao: string
+	status: number,
+	avatar?: string
+	iat: number,
+	exp: number
+}

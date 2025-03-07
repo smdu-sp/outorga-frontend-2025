@@ -10,9 +10,7 @@ export async function FetchValidaUsuario(access_token: string) {
 				Authorization: `Bearer ${access_token}`,
 			},
 		});
-
 		const data = await usuario.json();
-
 		return {
 			ok: true,
 			error: null,
