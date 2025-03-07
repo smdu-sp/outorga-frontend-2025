@@ -111,12 +111,13 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 
 				if (resp.ok) {
 					await update({
-						user: {},
+						...session,
+						usuario: {
+							...session?.usuario,
+							avatar: avatar,
+						},
 					});
-					// if (isUpdateSesion && isUpdateSesion.usuario) {
-					// 	isUpdateSesion.usuario.avatar = avatar;
-					// 	isUpdateSesion.usuario.permissao = permissao;
-					// }
+
 					toast.success('Usuário Atualizado', { description: resp.status });
 				}
 			} else {

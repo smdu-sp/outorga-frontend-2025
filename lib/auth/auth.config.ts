@@ -33,10 +33,12 @@ export default {
 	],
 	callbacks: {
 		async jwt({ token, user, trigger, session }) {
-			console.log({ token, user, trigger, session });
-			if (trigger === 'update') {
-				// const sessao = token.user as any;
-				console.log({ token, user, trigger, session });
+			if (trigger === 'update' && session) {
+				if (session.usuario.avatar) {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					(token.user as any).usuario.avatar = session.usuario.avatar;
+					return token;
+				}
 			}
 			if (user) token.user = user;
 			return token;
@@ -44,7 +46,8 @@ export default {
 		async session({ session, token }) {
 			//eslint-disable-next-line @typescript-eslint/no-explicit-any
 			session = token.user as any;
-			if (session.access_token)
+
+			if (session.access_token && !session.usuario)
 				session.usuario = jwtDecode(session.access_token);
 			const now = new Date();
 			if (session.usuario.exp * 1000 < now.getTime()) {
