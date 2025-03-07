@@ -7,6 +7,7 @@ import { DialogClose } from '@/components/ui/dialog';
 import {
 	Form,
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -37,6 +38,7 @@ const formSchemaUsuario = z.object({
 	login: z.string(),
 	email: z.string().email(),
 	permissao: z.enum(['USR', 'DEV', 'ADM', 'SUP']),
+	avatar: z.string().optional(),
 });
 
 const formSchema = z.object({
@@ -57,6 +59,7 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 			login: user?.login || '',
 			nome: user?.nome || '',
 			permissao: user?.permissao || 'USR',
+			avatar: user?.avatar || '',
 		},
 	});
 
@@ -95,8 +98,12 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 		startTransition(async () => {
 			if (isUpdating && user?.id && values?.permissao) {
 				const permissao = values.permissao;
-				console.log(permissao);
-				const resp = await AtualizarUsuario(user?.id, { permissao: permissao });
+				const avatar = values.avatar;
+
+				const resp = await AtualizarUsuario(user?.id, {
+					permissao: permissao,
+					avatar: avatar,
+				});
 
 				if (resp.error) {
 					toast.error('Algo deu errado', { description: resp.error });
@@ -104,6 +111,7 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 
 				if (resp.ok) {
 					toast.success('Usuário Atualizado', { description: resp.status });
+					console.log(resp);
 				}
 			} else {
 				const { email, login, nome, permissao } = values;
@@ -164,6 +172,23 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 				<form
 					onSubmit={formUsuario.handleSubmit(onSubmitUser)}
 					className='space-y-4'>
+					<FormField
+						control={formUsuario.control}
+						name='avatar'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Avatar</FormLabel>
+								<FormDescription>Insira a URL do seu avatar</FormDescription>
+								<FormControl>
+									<Input
+										placeholder='URL de avatar'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 					<FormField
 						control={formUsuario.control}
 						name='login'

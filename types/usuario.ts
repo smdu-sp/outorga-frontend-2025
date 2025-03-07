@@ -24,6 +24,7 @@ export interface IUpdateUsuario {
 	id?: string;
 	permissao?: 'USR' | 'DEV' | 'ADM' | 'SUP';
 	status?: boolean;
+	avatar?: string;
 }
 
 export interface IPaginadoUsuario {
