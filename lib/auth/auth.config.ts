@@ -33,9 +33,9 @@ export default {
 	],
 	callbacks: {
 		async jwt({ token, user, trigger, session }) {
+			console.log({ token, user, trigger, session });
 			if (trigger === 'update') {
-				//eslint-disable-next-line @typescript-eslint/no-explicit-any
-				const sessao = token.user as any;
+				// const sessao = token.user as any;
 				console.log({ token, user, trigger, session });
 			}
 			if (user) token.user = user;

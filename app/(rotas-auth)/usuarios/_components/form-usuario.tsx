@@ -70,10 +70,10 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 		},
 	});
 
-	const session = useSession();
+	const { data: session, update } = useSession();
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		const token = session.data?.access_token;
+		const token = session?.access_token;
 		if (!token) {
 			toast.error('Não autorizado');
 			return;
@@ -110,8 +110,14 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 				}
 
 				if (resp.ok) {
+					await update({
+						user: {},
+					});
+					// if (isUpdateSesion && isUpdateSesion.usuario) {
+					// 	isUpdateSesion.usuario.avatar = avatar;
+					// 	isUpdateSesion.usuario.permissao = permissao;
+					// }
 					toast.success('Usuário Atualizado', { description: resp.status });
-					console.log(resp);
 				}
 			} else {
 				const { email, login, nome, permissao } = values;

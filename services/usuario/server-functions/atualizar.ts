@@ -2,10 +2,10 @@
 
 'use server';
 
-import { redirect } from 'next/navigation';
-import { IUpdateUsuario, IRespostaUsuario } from '../../../types/usuario';
 import { auth } from '@/lib/auth/auth';
 import { revalidateTag } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { IRespostaUsuario, IUpdateUsuario } from '../../../types/usuario';
 
 export async function AtualizarUsuario(
 	id: string,
