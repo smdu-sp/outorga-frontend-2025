@@ -68,6 +68,16 @@ export default {
 				session.refresh_token = refresh_token;
 				if (access_token) session.usuario = jwtDecode(access_token);
 			}
+			if (session.access_token) {
+				const response = await fetch(
+					`${process.env.NEXT_PUBLIC_API_URL}usuarios/valida-usuario`,
+					{
+						headers: {
+							Authorization: `Bearer ${session.access_token}`,
+						},
+					},
+				);
+			}
 			return session;
 		},
 	},

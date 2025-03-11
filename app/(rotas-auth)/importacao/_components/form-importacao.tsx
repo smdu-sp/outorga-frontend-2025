@@ -22,7 +22,6 @@ export interface IProcesso {
     codigo?: string
     num_processo: string
     protocolo_ad?: string
-    cpf_cnpj?: string
     data_entrada?: Date
     parcelas?: IParcela[]
 }
@@ -35,6 +34,7 @@ export interface IParcela {
     data_quitacao?: Date
     ano_pagamento?: number
     status_quitacao: boolean
+    cpf_cnpj?: string
 }
 
 export default function FormImportacao() {
@@ -71,6 +71,14 @@ export default function FormImportacao() {
         };
     }
 
+    function verificaVencimentoParcela(processo: IProcesso) {
+        if (processo.parcelas) {
+            const parcelas2024 = processo.parcelas.filter(parcela => parcela.vencimento.getFullYear() >= 2024);
+            return parcelas2024.length > 0;
+        }
+        return false;
+    }
+
     async function planilhaAD(wb: xlsx.WorkBook) {
         const emPagamentoDPD = wb.Sheets[wb.SheetNames[1]];
         const quitadoDPD = wb.Sheets[wb.SheetNames[2]];
@@ -100,13 +108,13 @@ export default function FormImportacao() {
                 const ano_pagamento = (linhaParcela[8] && linhaParcela[8] !== "") ? +linhaParcela[8] : undefined;
 
                 if (num_parcela === 1 && data_entrada) {
-                    if (processo) processos.push(processo);
-                    processo = { tipo, data_entrada, protocolo_ad, num_processo, cpf_cnpj, parcelas: [] }
+                    if (processo && verificaVencimentoParcela(processo)) processos.push(processo);
+                    processo = { tipo, data_entrada, protocolo_ad, num_processo, parcelas: [] }
                 }
-                if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento });
+                if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento, cpf_cnpj });
             }
         }
-        if (processo) processos.push(processo);
+        if (processo && verificaVencimentoParcela(processo)) processos.push(processo);
         processo = undefined;
         for (const linha of linhasQuitadoDPD) {
             //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,12 +133,12 @@ export default function FormImportacao() {
             const ano_pagamento = vencimento ? vencimento.getFullYear() : undefined;
 
             if (num_parcela === 1 && data_entrada) {
-                if (processo) processos.push(processo);
-                processo = { tipo, data_entrada, protocolo_ad, num_processo, cpf_cnpj, parcelas: [] }
+                if (processo && verificaVencimentoParcela(processo)) processos.push(processo);
+                processo = { tipo, data_entrada, protocolo_ad, num_processo, parcelas: [] }
             }
-            if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento });            
+            if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento, cpf_cnpj });            
         }
-        if (processo) processos.push(processo);
+        if (processo && verificaVencimentoParcela(processo)) processos.push(processo);
         processo = undefined;
         for (const linha of linhasQuebraDPD) {
             //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -149,12 +157,12 @@ export default function FormImportacao() {
             const status_quitacao = (linhaParcela[9] && linhaParcela[9] !== "") ? linhaParcela[9].trim() === "Pago" || linhaParcela[9].trim() === "Quitado" : false;
 
             if (num_parcela === 1 && data_entrada) {
-                if (processo) processos.push(processo);
-                processo = { tipo, data_entrada, protocolo_ad, num_processo, cpf_cnpj, parcelas: [] }
+                if (processo && verificaVencimentoParcela(processo)) processos.push(processo);
+                processo = { tipo, data_entrada, protocolo_ad, num_processo, parcelas: [] }
             }
-            if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento });
+            if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento, cpf_cnpj });
         }
-        if (processo) processos.push(processo);
+        if (processo && verificaVencimentoParcela(processo)) processos.push(processo);
         processo = undefined;
         for (const linha of linhasPagamentoAVistaDPCI) {
             //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -164,8 +172,8 @@ export default function FormImportacao() {
             const tipo = linhaParcela[1] ? linhaParcela[1] === "PDE" ? "PDE" : "COTA" : undefined;
             const protocolo_ad = linhaParcela[2] || undefined;
             const num_processo = linhaParcela[3] || undefined;
-            const cpf_cnpj = linhaParcela[4] || undefined;
 
+            const cpf_cnpj = linhaParcela[4] || undefined;
             const num_parcela = +linhaParcela[5];
             const vencimento = new Date(Date.UTC(0, 0, linhaParcela[6]));
             const valor = typeof linhaParcela[7] === "string" ? +linhaParcela[7].replace(".", "").replace(",", ".").replace("R$", "").trim() : linhaParcela[7];
@@ -173,12 +181,12 @@ export default function FormImportacao() {
             const status_quitacao = (linhaParcela[9] && linhaParcela[9] !== "") ? linhaParcela[9].trim() === "Pago" || linhaParcela[9].trim() === "Quitado" : false;
 
             if (num_parcela === 1 && data_entrada) {
-                if (processo) processos.push(processo);
-                processo = { tipo, data_entrada, protocolo_ad, num_processo, cpf_cnpj, parcelas: [] }
+                if (processo && verificaVencimentoParcela(processo)) processos.push(processo);
+                processo = { tipo, data_entrada, protocolo_ad, num_processo, parcelas: [] }
             }
-            if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento });
+            if (processo && num_parcela && valor) processo.parcelas?.push({ num_parcela, status_quitacao, valor: valor || 0, vencimento, ano_pagamento, cpf_cnpj });
         }
-        if (processo) processos.push(processo);
+        if (processo && verificaVencimentoParcela(processo)) processos.push(processo);
         processo = undefined;
         if (processos.length > 0) {
             await CriarProcessos(processos);
@@ -246,8 +254,7 @@ export default function FormImportacao() {
                         </FormItem>
 					</div>
 					<Button
-						type='submit'
-						className='w-full'>
+						type='submit'>
 						Enviar
 					</Button>
 				</div>

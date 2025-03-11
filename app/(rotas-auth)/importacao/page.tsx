@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import FormImportacao from "./_components/form-importacao";
 
 export default function Importacao() {
-    return <Card className='mt-10'>
+    return <Card>
         <CardHeader>
             <CardTitle className='text-4xl font-bold'>Importação</CardTitle>
             <CardDescription className='hidden'>Importação</CardDescription>

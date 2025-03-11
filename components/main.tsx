@@ -21,6 +21,7 @@ export interface IMenu {
   icone: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>
   titulo: string
   url?: string
+  permissao?: string
   subItens?: ISubMenu[]
 }
 
@@ -42,6 +43,13 @@ const menuAdmin: IMenu[] = [
     icone: Users,
     titulo: "Usuários",
     url: "/usuarios",
+    permissao: "usuario_buscar_tudo"
+  },
+  {
+    icone: Users,
+    titulo: "Permissões",
+    url: "/permissoes",
+    permissao: "permissao_buscar_tudo"
   }
 ]
 

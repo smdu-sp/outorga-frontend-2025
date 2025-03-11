@@ -36,7 +36,7 @@ export function DrawerMenu({ data }: { data: { menuUsuario: IMenu[], menuAdmin: 
             <div className="mx-auto w-full px-4">
                 <div className="p-4 pb-0">
                     <ul className="flex w-full min-w-0 flex-col gap-1">
-                    {data.menuUsuario.map((item) => (
+                        {data.menuUsuario.map((item) => (
                             item.subItens && item.subItens.length > 0 ? <Collapsible asChild className="group/collapsible" key={item.titulo}>
                                 <li className="group/menu-item relative w-full">
                                     <CollapsibleTrigger className="w-full" asChild>
