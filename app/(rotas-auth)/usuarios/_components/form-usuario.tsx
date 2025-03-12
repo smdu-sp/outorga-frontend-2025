@@ -14,13 +14,6 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
 import * as usuario from '@/services/usuario';
 import { IUsuario } from '@/types/usuario';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -87,7 +80,6 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 			formUsuario.setValue('nome', usuario.nome);
 			formUsuario.setValue('email', usuario.email);
 			formUsuario.setValue('login', usuario.login);
-			console.log(resp.data);
 		}
 	}
 
@@ -124,7 +116,7 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 				if (resp.ok) {
 					toast.success('Usuário Criado', { description: resp.status });
 				}
-				console.log(JSON.stringify(resp));
+				
 			}
 		});
 	}
