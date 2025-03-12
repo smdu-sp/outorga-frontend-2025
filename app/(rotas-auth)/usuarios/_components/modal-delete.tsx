@@ -11,8 +11,9 @@ import {
 	DialogTrigger,
 } from '@/components/ui/dialog';
 import * as usuario from '@/services/usuario';
-import { Check, Loader2, Trash2, UserRoundX } from 'lucide-react';
-import { useTransition } from 'react';
+import { Check, Loader2, Trash2 } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 export default function ModalDelete({ id, status }: { id: string, status: boolean }) {

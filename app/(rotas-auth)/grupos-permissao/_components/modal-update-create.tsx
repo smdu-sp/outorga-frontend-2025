@@ -1,4 +1,5 @@
 /** @format */
+'use client'
 
 import { Button } from '@/components/ui/button';
 import {
@@ -10,7 +11,7 @@ import {
 	DialogTrigger,
 } from '@/components/ui/dialog';
 import { Plus, SquarePen } from 'lucide-react';
-import FormPermissao from './form-grupo-permissao';
+import FormGrupoPermissao from './form-grupo-permissao';
 import { IGrupoPermissao } from '@/types/grupo-permissao';
 
 export default function ModalUpdateAndCreate({
@@ -51,7 +52,7 @@ export default function ModalUpdateAndCreate({
 						Gerencie as informações do grupo de permissão
 					</DialogDescription>
 				</DialogHeader>
-				<FormPermissao
+				<FormGrupoPermissao
 					grupoPermissao={grupoPermissao}
 					isUpdating={isUpdating}
 				/>
