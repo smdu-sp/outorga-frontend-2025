@@ -43,7 +43,7 @@ export default function FormBuscaUsuario() {
 		}
 		const { login } = values;
 		const resp = await usuarios.buscarNovo(login, token);
-		console.log(resp);
+		
 
 		if (resp.error) {
 			toast.error('Algo deu errado', { description: resp.error });
@@ -53,7 +53,7 @@ export default function FormBuscaUsuario() {
 			const usuario = resp.data as IUsuario;
 			toast.success('Usuário encontrado', { description: usuario.nome });
 		}
-		console.log(resp);
+
 	}
 
 	return (
