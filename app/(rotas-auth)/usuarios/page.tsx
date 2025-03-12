@@ -13,7 +13,7 @@ import Pagination from '@/components/pagination';
 import { Suspense } from 'react';
 import { IPaginadoUsuario, IUsuario } from '@/types/usuario';
 import { auth } from '@/lib/auth/auth';
-import { FetchBuscarTudo } from '@/services/usuario/query-functions/buscar-tudo';
+import * as usuario from '@/services/usuario';
 import ModalUpdateAndCreate from './_components/modal-update-create';
 
 export default function UsuariosSuspense({
@@ -39,7 +39,7 @@ async function Usuarios({
 	let dados: IUsuario[] = [];
 	const session = await auth();
 	if (session && session.access_token) {
-		const response = await FetchBuscarTudo(
+		const response = await usuario.buscarTudo(
 			session.access_token || '',
 			+pagina,
 			+limite,
@@ -60,7 +60,7 @@ async function Usuarios({
 		}
 	}
 
-	return (
+	return ([
 		<div className='max-w-7xl w-full relative h-full'>
 			<Card>
 				<CardHeader>
@@ -85,9 +85,9 @@ async function Usuarios({
 					)}
 				</CardContent>
 			</Card>
-			<div className='absolute bottom-5 right-5 hover:scale-110'>
-				<ModalUpdateAndCreate isUpdating={false} />
-			</div>
+		</div>,
+		<div className='absolute bottom-5 right-5 hover:scale-110'>
+			<ModalUpdateAndCreate isUpdating={false} />
 		</div>
-	);
+	]);
 }

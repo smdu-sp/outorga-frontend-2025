@@ -2,23 +2,20 @@
 
 'use client';
 
-import { IUsuario } from '@/types/usuario';
 import { ColumnDef } from '@tanstack/react-table';
 import ModalUpdateCreate from './modal-update-create';
 import ModalDelete from './modal-delete';
+import { IGrupoPermissao } from '@/types/grupo-permissao';
 
-export const columns: ColumnDef<IUsuario>[] = [
+export const columns: ColumnDef<IGrupoPermissao>[] = [
 	{
 		accessorKey: 'nome',
 		header: 'Nome',
 	},
 	{
-		accessorKey: 'login',
-		header: 'Usuário',
-	},
-	{
-		accessorKey: 'email',
-		header: 'E-mail',
+		accessorKey: 'permissoes',
+		header: () => 'Permissões cadastradas',
+		cell: ({ row }) => { return `${row.original.permissoes?.length || 0}` },
 	},
 	{
 		accessorKey: 'actions',
@@ -29,10 +26,10 @@ export const columns: ColumnDef<IUsuario>[] = [
 					className='flex gap-2 items-center justify-end'
 					key={row.id}>
 					<ModalUpdateCreate
-						user={row.original}
+						grupoPermissao={row.original}
 						isUpdating={true}
 					/>
-					<ModalDelete status={!row.original.status} id={row.original.id} />
+					<ModalDelete id={row.original.id} />
 				</div>
 			);
 		},

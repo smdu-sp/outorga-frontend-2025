@@ -1,11 +1,13 @@
 /** @format */
 
+import { IPermissao } from "./permissao";
+
 export interface IUsuario {
 	id: string;
 	nome: string;
 	login: string;
 	email: string;
-	permissao: 'USR' | 'DEV' | 'ADM' | 'SUP';
+	permissoes: IPermissao[];
 	avatar?: string;
 	status: boolean;
 	ultimologin: Date;
@@ -17,14 +19,15 @@ export interface ICreateUsuario {
 	nome: string;
 	email: string;
 	login: string;
-	permissao: 'USR' | 'DEV' | 'ADM' | 'SUP';
+	avatar?: string;
+	permissoes?: string[];
 }
 
 export interface IUpdateUsuario {
 	id?: string;
-	permissao?: 'USR' | 'DEV' | 'ADM' | 'SUP';
 	status?: boolean;
 	avatar?: string;
+	permissoes?: string[];
 }
 
 export interface IPaginadoUsuario {
@@ -34,10 +37,16 @@ export interface IPaginadoUsuario {
 	limite: number;
 }
 
+export interface INovoUsuario {
+	login: string;
+	nome: string;
+	email: string;
+}
+
 export interface IRespostaUsuario {
 	ok: boolean;
 	error: string | null;
-	data: IUsuario | IPaginadoUsuario | null;
+	data: INovoUsuario | IUsuario | IUsuario[] | IPaginadoUsuario | { autorizado: boolean } | { desativado: boolean } | null;
 	status: number;
 }
 

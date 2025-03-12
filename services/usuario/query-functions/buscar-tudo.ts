@@ -1,8 +1,8 @@
 /** @format */
 
-import { IRespostaUsuario } from '@/types/usuario';
+import { IPaginadoUsuario, IRespostaUsuario } from '@/types/usuario';
 
-export async function FetchBuscarTudo(
+export async function buscarTudo(
 	access_token: string,
 	pagina: number = 1,
 	limite: number = 10,
@@ -28,7 +28,7 @@ export async function FetchBuscarTudo(
 			return {
 				ok: true,
 				error: null,
-				data: data,
+				data: data as IPaginadoUsuario,
 				status: 200,
 			};
 		return {

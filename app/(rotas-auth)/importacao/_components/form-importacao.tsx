@@ -10,32 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useState } from "react";
-import { CriarProcessos } from "@/services/processos/server-functions/criar";
+import * as processosServices from "@/services/processos";
+import { IProcesso } from "@/types/processo";
 
 const formSchema = z.object({
     tipo: z.enum(["AD", "SEI"], { required_error: "Selecione um tipo de documento." }),
 });
-
-export interface IProcesso {
-    id?: string
-    tipo?: string
-    codigo?: string
-    num_processo: string
-    protocolo_ad?: string
-    data_entrada?: Date
-    parcelas?: IParcela[]
-}
-
-export interface IParcela {
-    id?: string
-    num_parcela: number
-    valor: number
-    vencimento: Date
-    data_quitacao?: Date
-    ano_pagamento?: number
-    status_quitacao: boolean
-    cpf_cnpj?: string
-}
 
 export default function FormImportacao() {
     const [arquivo, setArquivo] = useState<File | null>(null);
@@ -189,7 +169,7 @@ export default function FormImportacao() {
         if (processo && verificaVencimentoParcela(processo)) processos.push(processo);
         processo = undefined;
         if (processos.length > 0) {
-            await CriarProcessos(processos);
+            await processosServices.criar(processos);
         }
     }
 

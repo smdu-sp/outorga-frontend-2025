@@ -3,43 +3,7 @@
 'use server';
 
 import { auth } from "@/lib/auth/auth";
-
-
-export interface IProcessosPaginado {
-    total: number
-    pagina: number
-    limite: number
-    data?: IProcesso[]
-}
-
-export interface IProcesso {
-    id: string
-    tipo?: ['PDE', 'COTA']
-    codigo?: string
-    num_processo: string
-    protocolo_ad?: string
-    cpf_cnpj?: string
-    data_entrada?: Date
-    parcelas?: IParcela[]
-}
-
-export interface IParcela {
-    id: string
-    num_parcela: number
-    valor: number
-    vencimento: Date
-    data_quitacao?: Date
-    ano_pagamento?: number
-    status_quitacao: boolean
-    processo_id: string
-}
-
-export interface IRespostaProcesso {
-    ok: boolean;
-    error: string | null;
-    data: IProcessosPaginado | null;
-    status: number;
-}
+import { IRespostaProcesso } from "@/types/processo";
 
 export async function buscarTudo(
 	pagina: number = 1,

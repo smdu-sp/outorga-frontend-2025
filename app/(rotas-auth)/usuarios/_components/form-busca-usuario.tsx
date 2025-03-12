@@ -13,7 +13,8 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { FetchBuscarNovo } from '@/services/usuario/query-functions/buscar-novo';
+import * as usuarios from '@/services/usuario';
+import { IUsuario } from '@/types/usuario';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
@@ -41,15 +42,16 @@ export default function FormBuscaUsuario() {
 			return;
 		}
 		const { login } = values;
-		const resp = await FetchBuscarNovo(login, token);
+		const resp = await usuarios.buscarNovo(login, token);
 		console.log(resp);
 
 		if (resp.error) {
 			toast.error('Algo deu errado', { description: resp.error });
 		}
 
-		if (resp.ok) {
-			toast.success('Usuário encontrado', { description: resp.data.nome });
+		if (resp.ok && resp.data) {
+			const usuario = resp.data as IUsuario;
+			toast.success('Usuário encontrado', { description: usuario.nome });
 		}
 		console.log(resp);
 	}

@@ -21,9 +21,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { FetchBuscarNovo } from '@/services/usuario/query-functions/buscar-novo';
-import { AtualizarUsuario } from '@/services/usuario/server-functions/atualizar';
-import { CriarUsuario } from '@/services/usuario/server-functions/criar';
+import * as usuario from '@/services/usuario';
 import { IUsuario } from '@/types/usuario';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Loader2 } from 'lucide-react';
@@ -37,7 +35,6 @@ const formSchemaUsuario = z.object({
 	nome: z.string(),
 	login: z.string(),
 	email: z.string().email(),
-	permissao: z.enum(['USR', 'DEV', 'ADM', 'SUP']),
 	avatar: z.string().optional(),
 });
 
@@ -58,7 +55,6 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 			email: user?.email || '',
 			login: user?.login || '',
 			nome: user?.nome || '',
-			permissao: user?.permissao || 'USR',
 			avatar: user?.avatar || '',
 		},
 	});
@@ -79,29 +75,28 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 			return;
 		}
 		const { login } = values;
-		const resp = await FetchBuscarNovo(login, token);
+		const resp = await usuario.buscarNovo(login, token);
 
 		if (resp.error) {
 			toast.error('Algo deu errado', { description: resp.error });
 		}
 
-		if (resp.ok) {
-			toast.success('Usuário encontrado', { description: resp.data.nome });
-			formUsuario.setValue('nome', resp.data.nome);
-			formUsuario.setValue('email', resp.data.email);
-			formUsuario.setValue('login', resp.data.login);
+		if (resp.ok && resp.data) {
+			const usuario = resp.data as IUsuario;
+			toast.success('Usuário encontrado', { description: usuario.nome });
+			formUsuario.setValue('nome', usuario.nome);
+			formUsuario.setValue('email', usuario.email);
+			formUsuario.setValue('login', usuario.login);
 			console.log(resp.data);
 		}
 	}
 
 	async function onSubmitUser(values: z.infer<typeof formSchemaUsuario>) {
 		startTransition(async () => {
-			if (isUpdating && user?.id && values?.permissao) {
-				const permissao = values.permissao;
+			if (isUpdating && user?.id && values?.avatar) {
 				const avatar = values.avatar;
 
-				const resp = await AtualizarUsuario(user?.id, {
-					permissao: permissao,
+				const resp = await usuario.atualizar(user?.id, {
 					avatar: avatar,
 				});
 
@@ -121,8 +116,8 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 					toast.success('Usuário Atualizado', { description: resp.status });
 				}
 			} else {
-				const { email, login, nome, permissao } = values;
-				const resp = await CriarUsuario({ email, login, nome, permissao });
+				const { email, login, nome, avatar } = values;
+				const resp = await usuario.criar({ email, login, nome, avatar });
 				if (resp.error) {
 					toast.error('Algo deu errado', { description: resp.error });
 				}
@@ -245,31 +240,6 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 									/>
 								</FormControl>
 								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						control={formUsuario.control}
-						name='permissao'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Permissão</FormLabel>
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value}>
-									<FormControl>
-										<SelectTrigger>
-											<SelectValue placeholder='Selecione a permissão' />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										<SelectItem value='USR'>Usuário</SelectItem>
-										<SelectItem value='DEV'>Desenvolvedor</SelectItem>
-										<SelectItem value='ADM'>Administrador</SelectItem>
-										<SelectItem value='SUP'>Super Administrador</SelectItem>
-									</SelectContent>
-								</Select>
 							</FormItem>
 						)}
 					/>

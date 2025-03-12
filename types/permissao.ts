@@ -1,3 +1,5 @@
+import { IGrupoPermissao } from "./grupo-permissao"
+
 export interface IPaginadoPermissoes {
     total: number
     pagina: number
@@ -16,20 +18,10 @@ export interface IPermissao {
     alterado_em: Date
 }
 
-export interface IGrupoPermissao {
-    id: string
-    nome: string
-
-    permissoes?: IPermissao[]
-
-    criado_em: Date
-    alterado_em: Date
-}
-
 export interface IRespostaPermissao {
     ok: boolean;
     error: string | null;
-    data: IPermissao | { message: string } | IPaginadoPermissoes | null;
+    data: IPermissao | IPermissao[] | { desativado: boolean } | IPaginadoPermissoes | null;
     status: number;
 }
 

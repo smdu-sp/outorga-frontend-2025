@@ -4,16 +4,10 @@
 
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth/auth';
-import { IProcesso } from '@/app/(rotas-auth)/importacao/_components/form-importacao';
+import { IRespostaProcesso, IProcesso } from '@/types/processo';
 
-interface IRespostaProcesso {
-	ok: boolean;
-	error: string | null;
-	data: IProcesso[] | null;
-	status: number;
-}
 
-export async function CriarProcessos(
+export async function criar(
 	data: IProcesso[],
 ): Promise<IRespostaProcesso> {
 	const session = await auth();

@@ -10,6 +10,7 @@ import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
 
 function retornaPaginas(pagina: number, limite: number, total: number): number[] {
     const ultimaPagina = Math.ceil(total / limite);
@@ -25,11 +26,23 @@ export default function Pagination(props: { total: number, pagina: number, limit
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
+    const [limites, setLimites] = useState([5, 10, 15, 20, 50]);
 
     const total = props.total || +(searchParams.get('total') || 0);
     const [pagina, setPagina] = useState(props.pagina || +(searchParams.get('pagina') || 1));
-    const [limite, ] = useState(props.limite || +(searchParams.get('limite') || 10));
+    const [limite, setLimite] = useState(props.limite || +(searchParams.get('limite') || 10));
     const [paginas, setPaginas] = useState(retornaPaginas(pagina, limite, total));
+
+    function buscaLimites(total: number): void {
+        const limitesTemp = [5, 10, 15, 20, 50];
+        for (let i = 0; i < limitesTemp.length; i++) {
+            if (limitesTemp[i] >= total) {
+                setLimites(limitesTemp.slice(0, i));
+                return;
+            }
+        }
+        setLimites(limites);
+    }
 
     useEffect(() => {
         const params = new URLSearchParams(searchParams.toString())
@@ -37,14 +50,14 @@ export default function Pagination(props: { total: number, pagina: number, limit
         params.set('limite', String(limite));
         params.set('total', String(total));
         router.push(pathname + '?' + params.toString(), { scroll: false });
-
+        buscaLimites(total);
         props.success && toast.success("Lista atualizada!");
-
         setPaginas(retornaPaginas(pagina, limite, total));
     }, [pagina, limite, searchParams, pathname, total, router]);
 
     return paginas.length > 0 && (
         <ShadPagination>
+            <div className="w-[120px] hidden md:block text-xs">{(limite*(pagina-1))+1} a {limite*pagina < total ? limite*pagina : total} de {total}</div>
             <PaginationContent>
                 {!paginas.includes(1) && <PaginationItem>
                     <PaginationLink onClick={() => setPagina(1)}><ChevronsLeftIcon /></PaginationLink>
@@ -62,6 +75,29 @@ export default function Pagination(props: { total: number, pagina: number, limit
                     <PaginationLink  onClick={() => setPagina(Math.ceil(total / limite))}><ChevronsRightIcon /></PaginationLink>
                 </PaginationItem>}
             </PaginationContent>
+            {total >= 5 ? <Select
+                value={limite.toString()}
+                onValueChange={(value) => {
+                    setLimite(+value);
+                }}
+            >
+                <SelectTrigger className="w-[120px]">
+                    <SelectValue placeholder="Registros" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        <SelectLabel>Registros</SelectLabel>
+                        {limites.map((limiteMap) => 
+                            <SelectItem 
+                                key={limiteMap}
+                                value={limiteMap.toString()}
+                                
+                            >{limiteMap}</SelectItem>
+                        )}
+                        {((total > limites[limites.length - 1] && total < 1000) || limites.length < 1)&& <SelectItem value={total.toString()}>Todos</SelectItem>}
+                    </SelectGroup>
+                </SelectContent>
+            </Select> : <div className="w-[120px] hidden md:block"></div>}
         </ShadPagination>
     )
 }

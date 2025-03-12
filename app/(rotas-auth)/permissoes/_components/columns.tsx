@@ -16,21 +16,21 @@ export const columns: ColumnDef<IPermissao>[] = [
 		accessorKey: 'permissao',
 		header: 'Permissão',
 	},
-	{
-		accessorKey: 'actions',
-		header: () => <p className='text-center'>Ações</p>,
-		cell: ({ row }) => {
-			return (
-				<div
-					className='flex gap-2 items-center justify-center'
-					key={row.id}>
-					<ModalUpdateCreate
-						permissao={row.original}
-						isUpdating={true}
-					/>
-					<ModalDelete id={row.original.id} />
-				</div>
-			);
+		{
+			accessorKey: 'actions',
+			header: () => <p></p>,
+			cell: ({ row }) => {
+				return (
+					<div
+						className='flex gap-2 items-center justify-end'
+						key={row.id}>
+						<ModalUpdateCreate
+							permissao={row.original}
+							isUpdating={true}
+						/>
+						<ModalDelete id={row.original.id} />
+					</div>
+				);
+			},
 		},
-	},
 ];

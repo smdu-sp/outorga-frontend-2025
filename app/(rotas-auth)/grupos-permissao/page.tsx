@@ -12,9 +12,10 @@ import { columns } from './_components/columns';
 import Pagination from '@/components/pagination';
 import { Suspense } from 'react';
 import { auth } from '@/lib/auth/auth';
-import * as permissoes from '@/services/permissoes';
+import * as gruposPermissao from '@/services/grupos-permissao';
 import { IPaginadoPermissoes, IPermissao } from '@/types/permissao';
 import ModalUpdateAndCreate from './_components/modal-update-create';
+import { IGrupoPermissao, IPaginadoGrupoPermissao } from '@/types/grupo-permissao';
 
 export default function UsuariosSuspense({
 	searchParams,
@@ -36,10 +37,10 @@ async function Permissoes({
 	let { pagina = 1, limite = 10, total = 0 } = await searchParams;
 	let ok = false;
 	const { busca = '' } = await searchParams;
-	let dados: IPermissao[] = [];
+	let dados: IGrupoPermissao[] = [];
 	const session = await auth();
 	if (session && session.access_token) {
-		const response = await permissoes.buscarTudo(
+		const response = await gruposPermissao.buscarTudo(
 			+pagina,
 			+limite,
 			busca as string,
@@ -48,13 +49,13 @@ async function Permissoes({
 		ok = response.ok;
 		if (ok) {
 			if (data) {
-				const paginado = data as IPaginadoPermissoes;
+				const paginado = data as IPaginadoGrupoPermissao;
 				pagina = paginado.pagina || 1;
 				limite = paginado.limite || 10;
 				total = paginado.total || 0;
 				dados = paginado.data || [];
 			}
-			const paginado = data as IPaginadoPermissoes;
+			const paginado = data as IPaginadoGrupoPermissao;
 			dados = paginado.data || [];
 		}
 	}
@@ -63,9 +64,9 @@ async function Permissoes({
 		<div className='max-w-7xl w-full relative h-full'>
 			<Card>
 				<CardHeader>
-					<CardTitle className='text-4xl font-bold'>Permissões</CardTitle>
+					<CardTitle className='text-4xl font-bold'>Grupos de Permissão</CardTitle>
 					<CardDescription>
-						Gerenciamento e consulta de permissões
+						Gerenciamento e consulta de grupos de permissão
 					</CardDescription>
 				</CardHeader>
 				<CardContent className='flex flex-col gap-10'>

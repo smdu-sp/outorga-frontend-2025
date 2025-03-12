@@ -5,9 +5,9 @@
 import { auth } from '@/lib/auth/auth';
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { IRespostaUsuario, IUpdateUsuario } from '../../../types/usuario';
+import { IRespostaUsuario, IUpdateUsuario, IUsuario } from '@/types/usuario';
 
-export async function AtualizarUsuario(
+export async function atualizar(
 	id: string,
 	data: IUpdateUsuario,
 ): Promise<IRespostaUsuario> {
@@ -29,7 +29,7 @@ export async function AtualizarUsuario(
 		return {
 			ok: true,
 			error: null,
-			data: dataResponse,
+			data: dataResponse as IUsuario,
 			status: 200,
 		};
 	}

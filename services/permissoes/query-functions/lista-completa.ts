@@ -3,17 +3,13 @@
 'use server';
 
 import { auth } from "@/lib/auth/auth";
-import { IPaginadoPermissoes, IRespostaPermissao } from "@/types/permissao";
+import { IPermissao, IRespostaPermissao } from "@/types/permissao";
 
-async function buscarTudo(
-    pagina: number = 1,
-    limite: number = 10,
-    busca: string = '',
-): Promise<IRespostaPermissao> {
+async function listaCompleta(): Promise<IRespostaPermissao> {
     const baseURL = process.env.NEXT_PUBLIC_API_URL;
     const session = await auth();
     try {
-        const permissoes = await fetch(`${baseURL}permissoes/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}`, {
+        const permissoes = await fetch(`${baseURL}permissoes/lista-completa`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,7 +22,7 @@ async function buscarTudo(
             return {
                 ok: true,
                 error: null,
-                data: data as IPaginadoPermissoes,
+                data: data as IPermissao[],
                 status: 200,
             };
         return {
@@ -38,7 +34,7 @@ async function buscarTudo(
     } catch (error) {
         return {
             ok: false,
-            error: 'Não foi possível buscar a lista de permissoes:' + error,
+            error: 'Não foi possível buscar a lista de permissões:' + error,
             data: null,
             status: 400,
         };
@@ -46,5 +42,5 @@ async function buscarTudo(
 }
 
 export { 
-    buscarTudo
+    listaCompleta
 };

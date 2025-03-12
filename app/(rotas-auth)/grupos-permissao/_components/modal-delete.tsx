@@ -10,47 +10,42 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import * as usuario from '@/services/usuario';
-import { Check, Loader2, Trash2, UserRoundX } from 'lucide-react';
+import * as gruposPermissao from '@/services/grupos-permissao';
+import { Loader2, Trash2 } from 'lucide-react';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
-export default function ModalDelete({ id, status }: { id: string, status: boolean }) {
+export default function ModalDelete({ id }: { id: string }) {
 	const [isPending, startTransition] = useTransition();
 
 	async function handleDelete(id: string) {
-		const resp = status ? await usuario.autorizar(id) : await usuario.desativar(id);
+		const resp = await gruposPermissao.excluir(id);
 		if (!resp.ok) {
-			console.log(resp);
 			toast.error('Algo deu errado', { description: resp.error });
 		} else {
-			toast.success(status ? 'Usuário Ativado com sucesso' : 'Usuário Deletado com sucesso', {
+			toast.success('Permissão excluída com sucesso', {
 				description: resp.status,
 			});
 		}
 	}
-	
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
 				<Button
 					size={'icon'}
 					variant={'outline'}
-					className={`${status ? 'hover:bg-primary' : 'hover:bg-destructive'} cursor-pointer hover:text-white group transition-all ease-linear duration-200`}>
-					{status ? <Check
-						size={24}
-						className='text-primary dark:text-white group-hover:text-white group'
-					/> : <Trash2
+					className='hover:bg-destructive  cursor-pointer hover:text-white group transition-all ease-linear duration-200'>
+					<Trash2
 						size={24}
 						className='text-destructive dark:text-white group-hover:text-white group'
-					/>}
+					/>
 				</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>{status ? "Ativar Usuário" : "Excluir Usuário"}</DialogTitle>
+					<DialogTitle>Excluir Grupo de Permissão</DialogTitle>
 				</DialogHeader>
-				{status ? <p>Tem certeza que deseja ativar esse usuário?</p> : <p>Tem certeza que deseja remover esse usuário?</p>}
+				<p>Tem certeza que deseja remover esse grupo de permissão?</p>
 				<DialogFooter>
 					<div className='flex gap-2'>
 						<DialogClose asChild>
@@ -64,8 +59,8 @@ export default function ModalDelete({ id, status }: { id: string, status: boolea
 								})
 							}
 							type='submit'
-							variant={status ? 'default': 'destructive'}>
-							{isPending ? <Loader2 className='animate-spin' /> : status ? 'Ativar' : 'Deletar'}
+							variant={'destructive'}>
+							{isPending ? <Loader2 className='animate-spin' /> : 'Deletar'}
 						</Button>
 					</div>
 				</DialogFooter>

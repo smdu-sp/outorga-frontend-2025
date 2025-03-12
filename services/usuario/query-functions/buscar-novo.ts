@@ -1,6 +1,8 @@
 /** @format */
 
-export async function FetchBuscarNovo(login: string, access_token: string) {
+import { INovoUsuario, IRespostaUsuario } from "@/types/usuario";
+
+export async function buscarNovo(login: string, access_token: string): Promise<IRespostaUsuario> {
 	if (!login || login === '')
 		return {
 			ok: false,
@@ -23,7 +25,7 @@ export async function FetchBuscarNovo(login: string, access_token: string) {
 			return {
 				ok: true,
 				error: null,
-				data: data,
+				data: data as INovoUsuario,
 				status: 200,
 			};
 		return {

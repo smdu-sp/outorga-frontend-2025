@@ -12,7 +12,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { House, LucideProps, Users } from "lucide-react"
+import { BookLock, House, Lock, LucideProps, Users } from "lucide-react"
 import { ForwardRefExoticComponent, ReactNode, RefAttributes } from "react"
 import { DrawerMenu } from "./drawer-menu"
 import { ModeToggle } from "./toggle-theme"
@@ -46,10 +46,16 @@ const menuAdmin: IMenu[] = [
     permissao: "usuario_buscar_tudo"
   },
   {
-    icone: Users,
+    icone: Lock,
     titulo: "Permissões",
     url: "/permissoes",
     permissao: "permissao_buscar_tudo"
+  },
+  {
+    icone: BookLock,
+    titulo: "Grupos de Permissão",
+    url: "/grupos-permissao",
+    permissao: "grupo_permissao_buscar_tudo"
   }
 ]
 

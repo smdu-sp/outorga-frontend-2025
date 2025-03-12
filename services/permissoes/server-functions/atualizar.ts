@@ -35,7 +35,7 @@ export async function atualizar(
 	if (!dataResponse)
 		return {
 			ok: false,
-			error: 'Erro ao atualizar usuário.',
+			error: 'Erro ao atualizar permissão.',
 			data: null,
 			status: 500,
 		};

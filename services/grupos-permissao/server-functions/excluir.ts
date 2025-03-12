@@ -3,16 +3,16 @@
 'use server';
 
 import { auth } from '@/lib/auth/auth';
-import { IRespostaPermissao } from '@/types/permissao';
+import { IRespostaGrupoPermissao } from '@/types/grupo-permissao';
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 
-async function excluir(id: string): Promise<IRespostaPermissao> {
+async function excluir(id: string): Promise<IRespostaGrupoPermissao> {
     const session = await auth();
     if (!session) redirect('/login');
     const baseURL = process.env.NEXT_PUBLIC_API_URL;
-    const desativado = await fetch(`${baseURL}permissoes/excluir/${id}`, {
+    const desativado = await fetch(`${baseURL}grupos-permissao/excluir/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ async function excluir(id: string): Promise<IRespostaPermissao> {
     });
     const dataResponse = await desativado.json();
     if (desativado.status === 200) {
-        revalidateTag('permissoes');
+        revalidateTag('grupos-permissao');
         return {
             ok: true,
             error: null,
@@ -32,7 +32,7 @@ async function excluir(id: string): Promise<IRespostaPermissao> {
     if (!dataResponse)
         return {
             ok: false,
-            error: 'Erro ao excluir permissão.',
+            error: 'Erro ao excluir grupo de permissão.',
             data: null,
             status: 500,
         };

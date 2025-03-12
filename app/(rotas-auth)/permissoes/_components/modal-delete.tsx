@@ -11,7 +11,7 @@ import {
 	DialogTrigger,
 } from '@/components/ui/dialog';
 import * as permissoes from '@/services/permissoes';
-import { Loader2, UserRoundX } from 'lucide-react';
+import { Loader2, Trash2, UserRoundX } from 'lucide-react';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
@@ -35,7 +35,7 @@ export default function ModalDelete({ id }: { id: string }) {
 					size={'icon'}
 					variant={'outline'}
 					className='hover:bg-destructive  cursor-pointer hover:text-white group transition-all ease-linear duration-200'>
-					<UserRoundX
+					<Trash2
 						size={24}
 						className='text-destructive dark:text-white group-hover:text-white group'
 					/>

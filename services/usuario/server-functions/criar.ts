@@ -3,16 +3,15 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { ICreateUsuario, IRespostaUsuario } from '../../../types/usuario';
+import { ICreateUsuario, IRespostaUsuario, IUsuario } from '@/types/usuario';
 import { auth } from '@/lib/auth/auth';
 import { revalidateTag } from 'next/cache';
 
-export async function CriarUsuario(
+export async function criar(
 	data: ICreateUsuario,
 ): Promise<IRespostaUsuario> {
 	const session = await auth();
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
-
 	if (!session) redirect('/login');
 	const response: Response = await fetch(`${baseURL}usuarios/criar`, {
 		method: 'POST',
@@ -28,7 +27,7 @@ export async function CriarUsuario(
 		return {
 			ok: true,
 			error: null,
-			data: dataResponse,
+			data: dataResponse as IUsuario,
 			status: 201,
 	}};
 	if (!dataResponse)

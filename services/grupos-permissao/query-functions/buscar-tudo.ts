@@ -3,30 +3,30 @@
 'use server';
 
 import { auth } from "@/lib/auth/auth";
-import { IPaginadoPermissoes, IRespostaPermissao } from "@/types/permissao";
+import { IPaginadoGrupoPermissao, IRespostaGrupoPermissao } from "@/types/grupo-permissao";
 
 async function buscarTudo(
     pagina: number = 1,
     limite: number = 10,
     busca: string = '',
-): Promise<IRespostaPermissao> {
+): Promise<IRespostaGrupoPermissao> {
     const baseURL = process.env.NEXT_PUBLIC_API_URL;
     const session = await auth();
     try {
-        const permissoes = await fetch(`${baseURL}permissoes/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}`, {
+        const permissoes = await fetch(`${baseURL}grupos-permissao/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${session?.access_token}`,
             },
-            next: { tags: ['permissoes'], revalidate: 120 },
+            next: { tags: ['grupos-permissao'], revalidate: 120 },
         });
         const data = await permissoes.json();
         if (permissoes.status === 200)
             return {
                 ok: true,
                 error: null,
-                data: data as IPaginadoPermissoes,
+                data: data as IPaginadoGrupoPermissao,
                 status: 200,
             };
         return {
@@ -38,7 +38,7 @@ async function buscarTudo(
     } catch (error) {
         return {
             ok: false,
-            error: 'Não foi possível buscar a lista de permissoes:' + error,
+            error: 'Não foi possível buscar a lista de grupos de permissão:' + error,
             data: null,
             status: 400,
         };

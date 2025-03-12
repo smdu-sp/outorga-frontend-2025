@@ -1,6 +1,8 @@
 /** @format */
 
-export async function FetchBuscarPorId(id: string, access_token: string) {
+import { IRespostaUsuario, IUsuario } from "@/types/usuario";
+
+export async function buscarPorId(id: string, access_token: string): Promise<IRespostaUsuario> {
 	if (!id || id === '')
 		return {
 			ok: false,
@@ -22,7 +24,7 @@ export async function FetchBuscarPorId(id: string, access_token: string) {
 			return {
 				ok: true,
 				error: null,
-				data: data,
+				data: data as IUsuario,
 				status: 200,
 			};
 		return {
