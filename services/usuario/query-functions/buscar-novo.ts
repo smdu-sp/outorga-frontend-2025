@@ -1,9 +1,8 @@
 /** @format */
 
-import { auth } from "@/lib/auth/auth";
 import { INovoUsuario, IRespostaUsuario } from "@/types/usuario";
 
-export async function buscarNovo(login: string): Promise<IRespostaUsuario> {
+export async function buscarNovo(login: string, access_token: string): Promise<IRespostaUsuario> {
 	if (!login || login === '')
 		return {
 			ok: false,
@@ -11,9 +10,6 @@ export async function buscarNovo(login: string): Promise<IRespostaUsuario> {
 			data: null,
 			status: 400,
 		};
-
-	const session = await auth();
-	const access_token = session?.access_token;
 
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 	try {

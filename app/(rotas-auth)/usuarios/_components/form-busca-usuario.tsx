@@ -36,8 +36,14 @@ export default function FormBuscaUsuario() {
 
 	const session = useSession();
 	async function onSubmit(values: z.infer<typeof formSchema>) {
+		const token = session.data?.access_token;
+		if (!token) {
+			toast.error('Não autorizado');
+			return;
+		}
 		const { login } = values;
-		const resp = await usuarios.buscarNovo(login);		
+		const resp = await usuarios.buscarNovo(login, token);
+		
 
 		if (resp.error) {
 			toast.error('Algo deu errado', { description: resp.error });
