@@ -1,11 +1,6 @@
 /** @format */
 
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -16,10 +11,16 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@/components/ui/table';
 import { IProcesso } from '@/types/processo';
-import React from 'react';
 
 export default function ModalProcessos({ processo }: { processo: IProcesso }) {
 	return (
@@ -37,54 +38,50 @@ export default function ModalProcessos({ processo }: { processo: IProcesso }) {
 						Processo: {processo.num_processo}
 					</DialogTitle>
 				</DialogHeader>
-				<ul className='grid grid-cols-2 gap-2'>
+				<ul className='flex items-center justify-between gap-5 text-sm'>
 					<li>Código: {processo.codigo}</li>
 					<li>Tipo: {processo.tipo}</li>
 					<li>Protocolo: {processo.protocolo_ad}</li>
 				</ul>
-				<ScrollArea className='max-h-80'>
-					<Accordion type='multiple'>
-						<AccordionItem value='item-1'>
-							<AccordionTrigger className='text-lg font-semibold'>
-								Parcelas
-							</AccordionTrigger>
-							<AccordionContent className='grid grid-cols-2 gap-5'>
-								{processo &&
-									processo.parcelas &&
-									processo.parcelas.map((item, index) => {
-										return (
-											<ul key={index}>
-												<li>Número da Parcela: {item.num_parcela}</li>
-												<li>
-													Status: {item.status_quitacao ? 'Ativo' : 'Inativo'}
-												</li>
-												<li>
-													Data de Quitação:{' '}
-													{item.data_quitacao
-														? new Date(item.data_quitacao).toLocaleDateString()
-														: 'Data não disponível'}
-												</li>
-												<li>
-													Data de Vencimento:{' '}
-													{item.data_quitacao
-														? new Date(item.data_quitacao).toLocaleDateString()
-														: 'Data não disponível'}
-												</li>
-												<li>
-													Valor:{' '}
-													{item.valor.toLocaleString('pt-BR', {
-														style: 'currency',
-														currency: 'BRL',
-													})}
-												</li>
-												<Separator className='my-3' />
-											</ul>
-										);
-									})}
-							</AccordionContent>
-						</AccordionItem>
-					</Accordion>
-				</ScrollArea>
+				<Table className='border'>
+					<TableHeader className='bg-primary hover:opacity-100'>
+						<TableRow className='hover:opacity-100'>
+							<TableHead className='text-secondary text-center'>
+								Nº da Parcela
+							</TableHead>
+							<TableHead className='text-secondary text-center'>
+								Valor
+							</TableHead>
+							<TableHead className='text-secondary text-center'>
+								Status
+							</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{processo &&
+							processo.parcelas &&
+							processo.parcelas.map((item, index) => (
+								<TableRow key={index}>
+									<TableCell className='font-medium text-center'>
+										{item.num_parcela}
+									</TableCell>
+									<TableCell className='text-center'>
+										{item.valor.toLocaleString('pt-BR', {
+											style: 'currency',
+											currency: 'BRL',
+										})}
+									</TableCell>
+									<TableCell className='text-center'>
+										{item.status_quitacao ? (
+											<Badge variant={'success'}>Ativo</Badge>
+										) : (
+											<Badge variant={'destructive'}>Inativo</Badge>
+										)}
+									</TableCell>
+								</TableRow>
+							))}
+					</TableBody>
+				</Table>
 				<DialogFooter>
 					<DialogClose asChild>
 						<Button variant={'outline'}>Voltar</Button>
