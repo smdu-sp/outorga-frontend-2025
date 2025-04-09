@@ -1,11 +1,12 @@
 /** @format */
 
 import DataTable, { TableSkeleton } from '@/components/data-table';
-import { IProcesso, IProcessosPaginado } from '@/types/processo';
 import Pagination from '@/components/pagination';
 import { buscarTudo } from '@/services/processos/query-functions/buscar-tudo';
+import { IProcesso, IProcessosPaginado } from '@/types/processo';
 import { Suspense } from 'react';
 import { columns } from '../_components/columns';
+import ModalFormProcessos from './_components/modal-form-processos';
 
 export default function Processos({
 	searchParams,
@@ -41,10 +42,12 @@ async function Home({
 	}
 
 	return (
-		<div className='container mx-auto w-full'>
+		<div className='container mx-auto w-full relative pb-14'>
 			<div className='flex flex-col gap-5'>
 				<h1 className='text-4xl font-bold'>Processos</h1>
-				<p>Consulte todos os processos pelo número</p>
+				<p className='text-muted-foreground'>
+					Consulte todos os processos pelo número
+				</p>
 			</div>
 			<div className='flex flex-col gap-5 mt-10'>
 				{dataProcessos && (
@@ -61,6 +64,9 @@ async function Home({
 						pagina={+pagina}
 					/>
 				)}
+			</div>
+			<div className='absolute right-0 -bottom-0'>
+				<ModalFormProcessos />
 			</div>
 		</div>
 	);

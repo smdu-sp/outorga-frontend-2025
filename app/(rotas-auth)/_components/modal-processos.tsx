@@ -22,7 +22,11 @@ import {
 } from '@/components/ui/table';
 import { IProcesso } from '@/types/processo';
 
-export default function ModalProcessos({ processo }: { processo: IProcesso }) {
+export default function ModalFormProcessos({
+	processo,
+}: {
+	processo: IProcesso;
+}) {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -38,8 +42,7 @@ export default function ModalProcessos({ processo }: { processo: IProcesso }) {
 						Processo: {processo.num_processo}
 					</DialogTitle>
 				</DialogHeader>
-				<ul className='flex items-center justify-between gap-5 text-sm'>
-					<li>Código: {processo.codigo}</li>
+				<ul className='flex items-center  gap-5 text-sm'>
 					<li>Tipo: {processo.tipo}</li>
 					<li>Protocolo: {processo.protocolo_ad}</li>
 				</ul>
