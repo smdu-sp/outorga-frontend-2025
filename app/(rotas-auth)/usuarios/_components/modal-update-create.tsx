@@ -20,6 +20,7 @@ export default function ModalUpdateAndCreate({
 	isUpdating: boolean;
 	user?: Partial<IUsuario>;
 }) {
+	console.log(isUpdating);
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -39,7 +40,7 @@ export default function ModalUpdateAndCreate({
 					) : (
 						<Plus
 							size={24}
-							className=' text-white group'
+							className='text-white group'
 						/>
 					)}
 				</Button>

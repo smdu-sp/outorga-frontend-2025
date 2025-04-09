@@ -7,33 +7,28 @@ import { DialogClose } from '@/components/ui/dialog';
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
 import * as permissoes from '@/services/permissoes';
+import * as gruposPermissao from '@/services/grupos-permissao';
+import { IGrupoPermissao } from '@/types/grupo-permissao';
 import { IPermissao } from '@/types/permissao';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowRight, Loader2 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { useTransition } from 'react';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { MultiSelect } from '@/components/multi-select';
 
 const formSchema = z.object({
 	nome: z.string(),
 	permissao: z.string(),
+	grupos: z.string().array()
 });
 
 interface FormPermissaoProps {
@@ -43,22 +38,36 @@ interface FormPermissaoProps {
 
 export default function FormPermissao({ isUpdating, permissao }: FormPermissaoProps) {
 	const [isPending, startTransition] = useTransition();
+	const [gruposLista, setGruposLista] = useState<IGrupoPermissao[]>([])
+	const defaultGrupos: string[] = permissao && permissao.grupos && permissao.grupos.length > 0 ? 
+		permissao.grupos.map(value => value.id) : []
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			nome: permissao?.nome || '',
 			permissao: permissao?.permissao || '',
+			grupos: defaultGrupos
 		},
 	});
+
+	useEffect(() => {
+		gruposPermissao.listaCompleta().then(({ ok, data, error, status}) => {
+			if (ok && status === 200) setGruposLista(data as IGrupoPermissao[]);
+			else console.log(error);
+		})
+	}, [])
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		startTransition(async () => {
 			if (isUpdating && permissao?.id && values?.permissao) {
 				const permissao_texto = values.permissao;
 				const nome = values.nome;
+				const grupos = values.grupos
 				const resp = await permissoes.atualizar(permissao?.id, {
 					permissao: permissao_texto,
-					nome
+					nome,
+					grupos
 				});
 				if (resp.error) toast.error('Algo deu errado', { description: resp.error });
 				else toast.success('Permissão Atualizada', { description: resp.status });
@@ -105,6 +114,26 @@ export default function FormPermissao({ isUpdating, permissao }: FormPermissaoPr
 									{...field}
 								/>
 							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="grupos"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Grupos de permissão</FormLabel>
+							<MultiSelect
+								options={gruposLista.map(grupoPermissaoMap => {
+									return { label: grupoPermissaoMap.nome, value: grupoPermissaoMap.id }
+								})}
+								onValueChange={field.onChange}
+								value={field.value}
+								defaultValue={field.value}
+								placeholder="Selecionar grupos"
+								variant="inverted"
+							/>
 							<FormMessage />
 						</FormItem>
 					)}

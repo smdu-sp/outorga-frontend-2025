@@ -1,5 +1,6 @@
 /** @format */
 
+import { IGrupoPermissao } from "./grupo-permissao";
 import { IPermissao } from "./permissao";
 
 export interface IUsuario {
@@ -8,6 +9,7 @@ export interface IUsuario {
 	login: string;
 	email: string;
 	permissoes: IPermissao[];
+	grupos: IGrupoPermissao[];
 	avatar?: string;
 	status: boolean;
 	ultimologin: Date;
@@ -21,6 +23,7 @@ export interface ICreateUsuario {
 	login: string;
 	avatar?: string;
 	permissoes?: string[];
+	grupos?: string[];
 }
 
 export interface IUpdateUsuario {
@@ -28,6 +31,7 @@ export interface IUpdateUsuario {
 	status?: boolean;
 	avatar?: string;
 	permissoes?: string[];
+	grupos?: string[];
 }
 
 export interface IPaginadoUsuario {

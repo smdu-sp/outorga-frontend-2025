@@ -8,7 +8,7 @@ import { IRespostaProcesso, IProcesso } from '@/types/processo';
 
 
 export async function criar(
-	data: IProcesso[],
+	data: IProcesso,
 ): Promise<IRespostaProcesso> {
 	const session = await auth();
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;

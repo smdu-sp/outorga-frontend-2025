@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/input';
 import * as gruposPermissao from '@/services/grupos-permissao';
 import * as permissoes from '@/services/permissoes';
 import { IGrupoPermissao } from '@/types/grupo-permissao';
-import { IPermissao, IRespostaPermissao } from '@/types/permissao';
+import { IPermissao } from '@/types/permissao';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useState, useTransition } from 'react';
@@ -51,6 +51,7 @@ export default function FormGrupoPermissao({ isUpdating, grupoPermissao }: FormG
 	});
 
 	useEffect(() => {
+		console.log(defaultPermissoes);
 		permissoes.listaCompleta().then(({ ok, data, error, status }) => {
 			if (ok && status === 200) setPermissoesLista(data as IPermissao[]);
 			else console.log(error);
@@ -61,14 +62,16 @@ export default function FormGrupoPermissao({ isUpdating, grupoPermissao }: FormG
 		startTransition(async () => {
 			if (isUpdating && grupoPermissao?.id && values?.nome) {
 				const nome = values.nome;
+				const permissoes = values.permissoes;
 				const resp = await gruposPermissao.atualizar(grupoPermissao?.id, {
-					nome
+					nome,
+					permissoes
 				});
 				if (resp.error) toast.error('Algo deu errado', { description: resp.error });
 				else toast.success('Grupo de permissão atualizado', { description: resp.status });
 			} else {
-				const { nome } = values;
-				const resp = await gruposPermissao.criar({ nome });
+				const { nome, permissoes } = values;
+				const resp = await gruposPermissao.criar({ nome, permissoes });
 				if (resp.error) toast.error('Algo deu errado', { description: resp.error });
 				if (resp.ok) toast.success('Grupo de permissão criado', { description: resp.status });
 				console.log(JSON.stringify(resp));
@@ -99,22 +102,6 @@ export default function FormGrupoPermissao({ isUpdating, grupoPermissao }: FormG
 				/>
 				<FormField
 					control={form.control}
-					name='nome'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Nome</FormLabel>
-							<FormControl>
-								<Input
-									placeholder='Nome da permissão'
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
 					name="permissoes"
 					render={({ field }) => (
 					<FormItem>
@@ -125,6 +112,7 @@ export default function FormGrupoPermissao({ isUpdating, grupoPermissao }: FormG
 							})}
 							onValueChange={field.onChange}
 							value={field.value}
+							defaultValue={field.value}
 							placeholder="Selecionar permissões"
 							variant="inverted"
 						/>

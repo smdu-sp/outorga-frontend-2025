@@ -33,24 +33,12 @@ export default function Pagination(props: { total: number, pagina: number, limit
     const [limite, setLimite] = useState(props.limite || +(searchParams.get('limite') || 10));
     const [paginas, setPaginas] = useState(retornaPaginas(pagina, limite, total));
 
-    function buscaLimites(total: number): void {
-        const limitesTemp = [5, 10, 15, 20, 50];
-        for (let i = 0; i < limitesTemp.length; i++) {
-            if (limitesTemp[i] >= total) {
-                setLimites(limitesTemp.slice(0, i));
-                return;
-            }
-        }
-        setLimites(limites);
-    }
-
     useEffect(() => {
         const params = new URLSearchParams(searchParams.toString())
         params.set('pagina', String(pagina));
         params.set('limite', String(limite));
         params.set('total', String(total));
         router.push(pathname + '?' + params.toString(), { scroll: false });
-        buscaLimites(total);
         props.success && toast.success("Lista atualizada!");
         setPaginas(retornaPaginas(pagina, limite, total));
     }, [pagina, limite, searchParams, pathname, total, router]);
@@ -75,7 +63,7 @@ export default function Pagination(props: { total: number, pagina: number, limit
                     <PaginationLink  onClick={() => setPagina(Math.ceil(total / limite))}><ChevronsRightIcon /></PaginationLink>
                 </PaginationItem>}
             </PaginationContent>
-            {total >= 5 ? <Select
+            <Select
                 value={limite.toString()}
                 onValueChange={(value) => {
                     setLimite(+value);
@@ -97,7 +85,7 @@ export default function Pagination(props: { total: number, pagina: number, limit
                         {((total > limites[limites.length - 1] && total < 1000) || limites.length < 1)&& <SelectItem value={total.toString()}>Todos</SelectItem>}
                     </SelectGroup>
                 </SelectContent>
-            </Select> : <div className="w-[120px] hidden md:block"></div>}
+            </Select>
         </ShadPagination>
     )
 }
