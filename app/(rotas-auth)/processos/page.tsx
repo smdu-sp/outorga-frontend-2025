@@ -44,7 +44,7 @@ async function Home({
 		<div className='container mx-auto w-full'>
 			<div className='flex flex-col gap-5'>
 				<h1 className='text-4xl font-bold'>Processos</h1>
-				<p>Consulte todos os processos pelo número</p>
+				<p className='text-muted-foreground'>Consulte todos os processos pelo número</p>
 			</div>
 			<div className='flex flex-col gap-5 mt-10'>
 				{dataProcessos && (

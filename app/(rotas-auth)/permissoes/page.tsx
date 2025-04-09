@@ -60,30 +60,27 @@ async function Permissoes({
 	}
 
 	return (<>
-		<div className='max-w-7xl w-full relative h-full'>
-			<Card>
-				<CardHeader>
-					<CardTitle className='text-4xl font-bold'>Permissões</CardTitle>
-					<CardDescription>
-						Gerenciamento e consulta de permissões
-					</CardDescription>
-				</CardHeader>
-				<CardContent className='flex flex-col gap-10'>
-					{dados && (
-						<DataTable
-							columns={columns}
-							data={dados || []}
-						/>
-					)}
-					{dados && dados.length > 0 && (
-						<Pagination
-							total={+total}
-							limite={+limite}
-							pagina={+pagina}
-						/>
-					)}
-				</CardContent>
-			</Card>
+		<div className='container mx-auto w-full'>
+			<div className='flex flex-col gap-5'>
+				<h1 className='text-4xl font-bold'>Permissões</h1>
+				<p className='text-muted-foreground'>Gerenciamento e consulta de permissões</p>
+			</div>
+			<div className='flex flex-col gap-5 mt-10'>
+				{dados && (
+					<DataTable
+						columns={columns}
+						data={dados || []}
+					/>
+				)}
+
+				{dados && dados.length > 0 && (
+					<Pagination
+						total={+total}
+						limite={+limite}
+						pagina={+pagina}
+					/>
+				)}
+			</div>
 		</div>
 		<div className='absolute bottom-5 right-5 hover:scale-110'>
 			<ModalUpdateAndCreate isUpdating={false} />
