@@ -59,7 +59,7 @@ async function Permissoes({
 		}
 	}
 
-	return ([
+	return (<>
 		<div className='max-w-7xl w-full relative h-full'>
 			<Card>
 				<CardHeader>
@@ -84,9 +84,9 @@ async function Permissoes({
 					)}
 				</CardContent>
 			</Card>
-		</div>,
+		</div>
 		<div className='absolute bottom-5 right-5 hover:scale-110'>
 			<ModalUpdateAndCreate isUpdating={false} />
 		</div>
-	]);
+	</>);
 }

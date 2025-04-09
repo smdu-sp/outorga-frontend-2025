@@ -9,7 +9,6 @@ import {
 import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
 
 function retornaPaginas(pagina: number, limite: number, total: number): number[] {
@@ -26,7 +25,7 @@ export default function Pagination(props: { total: number, pagina: number, limit
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
-    const [limites, setLimites] = useState([5, 10, 15, 20, 50]);
+    const limites = [5, 10, 15, 20, 50];
 
     const total = props.total || +(searchParams.get('total') || 0);
     const [pagina, setPagina] = useState(props.pagina || +(searchParams.get('pagina') || 1));
@@ -39,7 +38,6 @@ export default function Pagination(props: { total: number, pagina: number, limit
         params.set('limite', String(limite));
         params.set('total', String(total));
         router.push(pathname + '?' + params.toString(), { scroll: false });
-        props.success && toast.success("Lista atualizada!");
         setPaginas(retornaPaginas(pagina, limite, total));
     }, [pagina, limite, searchParams, pathname, total, router]);
 

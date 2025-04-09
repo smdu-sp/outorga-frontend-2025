@@ -40,7 +40,6 @@ export default function ModalProcessos({ processo }: { processo: IProcesso }) {
 				<ul className='grid grid-cols-2 gap-2'>
 					<li>Código: {processo.codigo}</li>
 					<li>Tipo: {processo.tipo}</li>
-					<li>CPF/CNPJ: {processo.cpf_cnpj}</li>
 					<li>Protocolo: {processo.protocolo_ad}</li>
 				</ul>
 				<ScrollArea className='max-h-80'>

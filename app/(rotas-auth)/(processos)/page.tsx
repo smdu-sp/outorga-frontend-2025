@@ -7,7 +7,7 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import Report from './_components/report';
-import { IProcesso } from '@/types/processo';
+import { IProcesso, IProcessosPaginado } from '@/types/processo';
 import { columns } from './_components/columns';
 import { buscarTudo } from '@/services/processos/query-functions/buscar-tudo';
 import Pagination from '@/components/pagination';
@@ -39,10 +39,11 @@ async function Home({
 	ok = response.ok;
 	if (ok) {
 		if (data) {
-			pagina = data.pagina || 1;
-			limite = data.limite || 10;
-			total = data.total || 0;
-			dataProcessos = data.data || [];
+			const paginado = data as IProcessosPaginado;
+			pagina = paginado.pagina || 1;
+			limite = paginado.limite || 10;
+			total = paginado.total || 0;
+			dataProcessos = paginado.data || [];
 		}
 	}
 

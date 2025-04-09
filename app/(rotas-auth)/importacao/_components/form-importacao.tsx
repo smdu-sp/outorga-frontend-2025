@@ -169,7 +169,7 @@ export default function FormImportacao() {
         if (processo && verificaVencimentoParcela(processo)) processos.push(processo);
         processo = undefined;
         if (processos.length > 0) {
-            await processosServices.criar(processos);
+            await processosServices.importar(processos);
         }
     }
 

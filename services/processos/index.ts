@@ -3,5 +3,6 @@ export {
 } from './query-functions';
 
 export {
-    criar
+    criar,
+    importar
 } from './server-functions';

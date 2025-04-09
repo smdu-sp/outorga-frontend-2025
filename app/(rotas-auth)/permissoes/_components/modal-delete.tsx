@@ -11,7 +11,7 @@ import {
 	DialogTrigger,
 } from '@/components/ui/dialog';
 import * as permissoes from '@/services/permissoes';
-import { Loader2, Trash2, UserRoundX } from 'lucide-react';
+import { Loader2, Trash2 } from 'lucide-react';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 

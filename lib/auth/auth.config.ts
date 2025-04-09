@@ -69,7 +69,7 @@ export default {
 				if (access_token) session.usuario = jwtDecode(access_token);
 			}
 			if (session.access_token) {
-				const response = await fetch(
+				await fetch(
 					`${process.env.NEXT_PUBLIC_API_URL}usuarios/valida-usuario`,
 					{
 						headers: {

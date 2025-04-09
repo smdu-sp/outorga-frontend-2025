@@ -13,7 +13,6 @@ import Pagination from '@/components/pagination';
 import { Suspense } from 'react';
 import { auth } from '@/lib/auth/auth';
 import * as gruposPermissao from '@/services/grupos-permissao';
-import { IPaginadoPermissoes, IPermissao } from '@/types/permissao';
 import ModalUpdateAndCreate from './_components/modal-update-create';
 import { IGrupoPermissao, IPaginadoGrupoPermissao } from '@/types/grupo-permissao';
 
@@ -60,7 +59,7 @@ async function Permissoes({
 		}
 	}
 
-	return ([
+	return (<>
 		<div className='max-w-7xl w-full relative h-full'>
 			<Card>
 				<CardHeader>
@@ -85,9 +84,9 @@ async function Permissoes({
 					)}
 				</CardContent>
 			</Card>
-		</div>,
+		</div>
 		<div className='absolute bottom-4 right-4 hover:scale-110'>
 			<ModalUpdateAndCreate isUpdating={false} />
 		</div>
-	]);
+	</>);
 }

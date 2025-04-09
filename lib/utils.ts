@@ -1,5 +1,4 @@
 import { clsx, type ClassValue } from "clsx"
-import { cp } from "fs";
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -29,10 +28,11 @@ export function validaCPF_CNPJ(cpf_cnpj: string) {
   }
   if (cpf_cnpjLimpo.length === 14) {
     if (cnpjs_invalidos.includes(cpf_cnpjLimpo)) return false;
-    var b = [ 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 ];
-    for (var i = 0, n = 0; i < 12; n += +cpf_cnpjLimpo[i] * b[++i]);
+    const b = [ 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 ];
+    let i = 0, n = 0;
+    for (i = 0, n = 0; i < 12; n += +cpf_cnpjLimpo[i] * b[++i]);
     if(+cpf_cnpjLimpo[12] != (((n %= 11) < 2) ? 0 : 11 - n)) return false;
-    for (var i = 0, n = 0; i <= 12; n += +cpf_cnpjLimpo[i] * b[i++]);
+    for (i = 0, n = 0; i <= 12; n += +cpf_cnpjLimpo[i] * b[i++]);
     if(+cpf_cnpjLimpo[13] != (((n %= 11) < 2) ? 0 : 11 - n)) return false;
     return true;
   }
