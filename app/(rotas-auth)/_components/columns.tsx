@@ -8,10 +8,6 @@ import ModalProcessos from './modal-processos';
 
 export const columns: ColumnDef<IProcesso>[] = [
 	{
-		accessorKey: 'codigo',
-		header: 'Código',
-	},
-	{
 		accessorKey: 'num_processo',
 		header: 'Número do Processo',
 	},
