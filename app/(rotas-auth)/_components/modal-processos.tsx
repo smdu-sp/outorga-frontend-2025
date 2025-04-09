@@ -26,8 +26,8 @@ export default function ModalProcessos({ processo }: { processo: IProcesso }) {
 		<Dialog>
 			<DialogTrigger asChild>
 				<Button
-					variant={'outline'}
-					className='w-full'>
+					variant={'ghost'}
+					className='w-full text-primary'>
 					Ver Detalhes
 				</Button>
 			</DialogTrigger>
@@ -49,36 +49,38 @@ export default function ModalProcessos({ processo }: { processo: IProcesso }) {
 								Parcelas
 							</AccordionTrigger>
 							<AccordionContent className='grid grid-cols-2 gap-5'>
-								{processo && processo.parcelas && processo.parcelas.map((item, index) => {
-									return (
-										<ul key={index}>
-											<li>Número da Parcela: {item.num_parcela}</li>
-											<li>
-												Status: {item.status_quitacao ? 'Ativo' : 'Inativo'}
-											</li>
-											<li>
-												Data de Quitação:{' '}
-												{item.data_quitacao
-													? new Date(item.data_quitacao).toLocaleDateString()
-													: 'Data não disponível'}
-											</li>
-											<li>
-												Data de Vencimento:{' '}
-												{item.data_quitacao
-													? new Date(item.data_quitacao).toLocaleDateString()
-													: 'Data não disponível'}
-											</li>
-											<li>
-												Valor:{' '}
-												{item.valor.toLocaleString('pt-BR', {
-													style: 'currency',
-													currency: 'BRL',
-												})}
-											</li>
-											<Separator className='my-3' />
-										</ul>
-									);
-								})}
+								{processo &&
+									processo.parcelas &&
+									processo.parcelas.map((item, index) => {
+										return (
+											<ul key={index}>
+												<li>Número da Parcela: {item.num_parcela}</li>
+												<li>
+													Status: {item.status_quitacao ? 'Ativo' : 'Inativo'}
+												</li>
+												<li>
+													Data de Quitação:{' '}
+													{item.data_quitacao
+														? new Date(item.data_quitacao).toLocaleDateString()
+														: 'Data não disponível'}
+												</li>
+												<li>
+													Data de Vencimento:{' '}
+													{item.data_quitacao
+														? new Date(item.data_quitacao).toLocaleDateString()
+														: 'Data não disponível'}
+												</li>
+												<li>
+													Valor:{' '}
+													{item.valor.toLocaleString('pt-BR', {
+														style: 'currency',
+														currency: 'BRL',
+													})}
+												</li>
+												<Separator className='my-3' />
+											</ul>
+										);
+									})}
 							</AccordionContent>
 						</AccordionItem>
 					</Accordion>

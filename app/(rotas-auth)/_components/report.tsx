@@ -8,10 +8,9 @@ export default function Report() {
 		{ name: 'Total de Procesos', value: 3.958 },
 		{ name: 'Valor Recebido', value: 'R$35.184.894,00' },
 		{ name: 'Valor à Receber', value: 'R$95.632.547,00' },
-		{ name: 'resolver', value: 0 },
 	];
 	return (
-		<div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5'>
+		<div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5'>
 			{data.map((item, index) => {
 				return (
 					<Card

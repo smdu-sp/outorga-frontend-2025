@@ -2,8 +2,8 @@
 
 'use server';
 
-import { auth } from "@/lib/auth/auth";
-import { IRespostaProcesso } from "@/types/processo";
+import { auth } from '@/lib/auth/auth';
+import { IRespostaProcesso } from '@/types/processo';
 
 export async function buscarTudo(
 	pagina: number = 1,
@@ -13,14 +13,18 @@ export async function buscarTudo(
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 	const session = await auth();
 	try {
-		const processos = await fetch(`${baseURL}processos/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${session?.access_token}`,
+		const processos = await fetch(
+			`${baseURL}processos/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${session?.access_token}`,
+				},
 			},
-		});
+		);
 		const data = await processos.json();
+
 		if (processos.status === 200)
 			return {
 				ok: true,

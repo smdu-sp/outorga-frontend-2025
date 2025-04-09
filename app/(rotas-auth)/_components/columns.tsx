@@ -24,6 +24,13 @@ export const columns: ColumnDef<IProcesso>[] = [
 		header: 'CPF/CNPJ',
 	},
 	{
+		accessorKey: 'parcelas',
+		header: 'Parcelas',
+		cell: ({ row }) => {
+			return <p>{row.original.parcelas?.length}</p>;
+		},
+	},
+	{
 		accessorKey: 'protocolo_ad',
 		header: 'Protocolo',
 	},
