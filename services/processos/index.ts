@@ -1,5 +1,6 @@
 export {
-    buscarTudo
+    buscarTudo,
+    dashboard
 } from './query-functions';
 
 export {

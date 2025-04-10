@@ -39,3 +39,13 @@ export interface IProcessosPaginado {
 	limite: number
 	data?: IProcesso[]
 }
+
+export interface IDashboard {
+	quantidadeTipo: { label: string; value: number }[]
+	valorTipo: { label: string; value: number }[]
+	processosTotal: number
+	totalRecebido: number
+	totalReceber: number
+	projecaoMensal: { label: string; value: number }[]
+	recebidoMensal: { label: string; value: number }[]
+}
