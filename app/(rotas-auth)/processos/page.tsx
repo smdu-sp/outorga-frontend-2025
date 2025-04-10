@@ -43,13 +43,13 @@ async function Home({
 
 	return (
 		<div className='container mx-auto w-full relative pb-14'>
-			<div className='flex flex-col gap-5'>
+			<div className='flex flex-col gap-2 mb-5'>
 				<h1 className='text-4xl font-bold'>Processos</h1>
 				<p className='text-muted-foreground'>
 					Consulte todos os processos pelo número
 				</p>
 			</div>
-			<div className='flex flex-col gap-5 mt-10'>
+			<div className='flex flex-col gap-5'>
 				{dataProcessos && (
 					<DataTable
 						columns={columns}

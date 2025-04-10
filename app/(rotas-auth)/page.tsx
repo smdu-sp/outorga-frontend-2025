@@ -27,10 +27,12 @@ async function Home({
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
 	return (
-		<div className=' mx-auto w-full'>
-			<div className='flex flex-col gap-5 mb-5'>
+		<div className='container mx-auto w-full'>
+			<div className='flex flex-col gap-2 mb-5'>
 				<h1 className='text-4xl font-bold'>Dashboard</h1>
-				<p>Relatório completo de processos de Outorga</p>
+				<p className='text-muted-foreground'>
+					Relatório completo de processos de Outorga
+				</p>
 			</div>
 			<div className='flex flex-col gap-5 w-full'>
 				<Report />

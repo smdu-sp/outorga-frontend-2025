@@ -1,19 +1,12 @@
 /** @format */
 
 import DataTable, { TableSkeleton } from '@/components/data-table';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
-import { columns } from './_components/columns';
 import Pagination from '@/components/pagination';
-import { Suspense } from 'react';
 import { auth } from '@/lib/auth/auth';
 import * as permissoes from '@/services/permissoes';
 import { IPaginadoPermissoes, IPermissao } from '@/types/permissao';
+import { Suspense } from 'react';
+import { columns } from './_components/columns';
 import ModalUpdateAndCreate from './_components/modal-update-create';
 
 export default function UsuariosSuspense({
@@ -59,31 +52,35 @@ async function Permissoes({
 		}
 	}
 
-	return (<>
-		<div className='container mx-auto w-full'>
-			<div className='flex flex-col gap-5'>
-				<h1 className='text-4xl font-bold'>Permissões</h1>
-				<p className='text-muted-foreground'>Gerenciamento e consulta de permissões</p>
-			</div>
-			<div className='flex flex-col gap-5 mt-10'>
-				{dados && (
-					<DataTable
-						columns={columns}
-						data={dados || []}
-					/>
-				)}
+	return (
+		<>
+			<div className='container mx-auto w-full'>
+				<div className='flex flex-col gap-2 mb-5'>
+					<h1 className='text-4xl font-bold'>Permissões</h1>
+					<p className='text-muted-foreground'>
+						Gerenciamento e consulta de permissões
+					</p>
+				</div>
+				<div className='flex flex-col gap-5'>
+					{dados && (
+						<DataTable
+							columns={columns}
+							data={dados || []}
+						/>
+					)}
 
-				{dados && dados.length > 0 && (
-					<Pagination
-						total={+total}
-						limite={+limite}
-						pagina={+pagina}
-					/>
-				)}
+					{dados && dados.length > 0 && (
+						<Pagination
+							total={+total}
+							limite={+limite}
+							pagina={+pagina}
+						/>
+					)}
+				</div>
 			</div>
-		</div>
-		<div className='absolute bottom-5 right-5 hover:scale-110'>
-			<ModalUpdateAndCreate isUpdating={false} />
-		</div>
-	</>);
+			<div className='absolute bottom-5 right-5 hover:scale-110'>
+				<ModalUpdateAndCreate isUpdating={false} />
+			</div>
+		</>
+	);
 }

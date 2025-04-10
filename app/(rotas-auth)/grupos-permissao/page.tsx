@@ -1,20 +1,16 @@
 /** @format */
 
 import DataTable, { TableSkeleton } from '@/components/data-table';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
-import { columns } from './_components/columns';
 import Pagination from '@/components/pagination';
-import { Suspense } from 'react';
 import { auth } from '@/lib/auth/auth';
 import * as gruposPermissao from '@/services/grupos-permissao';
+import {
+	IGrupoPermissao,
+	IPaginadoGrupoPermissao,
+} from '@/types/grupo-permissao';
+import { Suspense } from 'react';
+import { columns } from './_components/columns';
 import ModalUpdateAndCreate from './_components/modal-update-create';
-import { IGrupoPermissao, IPaginadoGrupoPermissao } from '@/types/grupo-permissao';
 
 export default function UsuariosSuspense({
 	searchParams,
@@ -59,34 +55,36 @@ async function Permissoes({
 		}
 	}
 
-	return (<>
-		<div className='max-w-7xl w-full relative h-full'>
-			<Card>
-				<CardHeader>
-					<CardTitle className='text-4xl font-bold'>Grupos de Permissão</CardTitle>
-					<CardDescription>
-						Gerenciamento e consulta de grupos de permissão
-					</CardDescription>
-				</CardHeader>
-				<CardContent className='flex flex-col gap-10'>
-					{dados && (
-						<DataTable
-							columns={columns}
-							data={dados || []}
-						/>
-					)}
-					{dados && dados.length > 0 && (
-						<Pagination
-							total={+total}
-							limite={+limite}
-							pagina={+pagina}
-						/>
-					)}
-				</CardContent>
-			</Card>
-		</div>
-		<div className='absolute bottom-4 right-4 hover:scale-110'>
-			<ModalUpdateAndCreate isUpdating={false} />
-		</div>
-	</>);
+	return (
+		<>
+			<div className='container w-full relative h-full'>
+				<div>
+					<div className='flex flex-col gap-2 mb-5'>
+						<h1 className='text-4xl font-bold'>Grupos de Permissão</h1>
+						<p className='text-muted-foreground'>
+							Gerenciamento e consulta de grupos de permissão
+						</p>
+					</div>
+					<div className='flex flex-col gap-10'>
+						{dados && (
+							<DataTable
+								columns={columns}
+								data={dados || []}
+							/>
+						)}
+						{dados && dados.length > 0 && (
+							<Pagination
+								total={+total}
+								limite={+limite}
+								pagina={+pagina}
+							/>
+						)}
+					</div>
+				</div>
+			</div>
+			<div className='absolute bottom-4 right-4 hover:scale-110'>
+				<ModalUpdateAndCreate isUpdating={false} />
+			</div>
+		</>
+	);
 }
