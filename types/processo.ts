@@ -34,18 +34,27 @@ export interface IRespostaProcesso {
 }
 
 export interface IProcessosPaginado {
-	total: number
-	pagina: number
-	limite: number
-	data?: IProcesso[]
+	total: number;
+	pagina: number;
+	limite: number;
+	data?: IProcesso[];
 }
 
 export interface IDashboard {
-	quantidadeTipo: { label: string; value: number }[]
-	valorTipo: { label: string; value: number }[]
-	processosTotal: number
-	totalRecebido: number
-	totalReceber: number
-	projecaoMensal: { label: string; value: number }[]
-	recebidoMensal: { label: string; value: number }[]
+	quantidadeTipo: { label: string; value: number }[];
+	valorTipo: { label: string; value: number }[];
+	processosTotal: number;
+	totalRecebido: number;
+	totalReceber: number;
+	projecaoMensal: { label: string; value: number }[];
+	recebidoMensal: { label: string; value: number }[];
 }
+
+export type ICreateProcesso = {
+	tipo?: string;
+	num_processo: string;
+	protocolo_ad?: string;
+	data_entrada: Date;
+	parcelas?: IParcela[];
+	valor_total: number;
+};
