@@ -24,6 +24,7 @@ export type IProcesso = {
 	protocolo_ad?: string;
 	data_entrada?: Date;
 	parcelas?: IParcela[];
+	total_parcelas?: number
 };
 
 export interface IRespostaProcesso {
@@ -41,14 +42,15 @@ export interface IProcessosPaginado {
 }
 
 export interface IDashboard {
-	quantidadeTipo: { label: string; value: number }[];
-	valorTipo: { label: string; value: number }[];
 	processosTotal: number;
 	totalRecebido: number;
 	totalReceber: number;
+	quantidadeTipo: { label: string; value: number }[];
+	valorTipo: { label: string; value: number }[];
 	projecaoMensal: { label: string; value: number }[];
 	recebidoMensal: { label: string; value: number }[];
 }
+
 
 export type ICreateProcesso = {
 	tipo?: string;
