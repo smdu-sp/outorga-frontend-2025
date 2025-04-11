@@ -50,10 +50,10 @@ export default function ModalFormProcessos({
 					<TableHeader className='bg-primary hover:opacity-100'>
 						<TableRow className='hover:opacity-100'>
 							<TableHead className='text-secondary text-center'>
-								Nº da Parcela
+								#
 							</TableHead>
 							<TableHead className='text-secondary text-center'>
-								Valor
+								R$
 							</TableHead>
 							<TableHead className='text-secondary text-center'>
 								Status

@@ -21,7 +21,7 @@ export default function ModalProcessos() {
 					<Plus />
 				</Button>
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent className='xl:max-w-[680px]'>
 				<DialogHeader>
 					<DialogTitle>Cadastrar Processo</DialogTitle>
 					<DialogDescription>
