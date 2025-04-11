@@ -3,11 +3,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React from 'react';
 
-export default function Report() {
+const formatter = new Intl.NumberFormat('pt-BR', {
+	style: 'currency',
+	currency: 'BRL',
+});
+
+export default function Report({ processosTotal, totalRecebido, totalReceber }: { processosTotal?: number; totalRecebido?: number; totalReceber?: number }) {
 	const data = [
-		{ name: 'Total de Procesos', value: 3.958 },
-		{ name: 'Valor Recebido', value: 'R$35.184.894,00' },
-		{ name: 'Valor à Receber', value: 'R$95.632.547,00' },
+		{ name: 'Total de Procesos', value: processosTotal || 0 },
+		{ name: 'Valor Recebido', value: formatter.format(totalRecebido || 0) },
+		{ name: 'Valor à Receber', value: formatter.format(totalReceber || 0) },
 	];
 	return (
 		<div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5'>

@@ -27,11 +27,18 @@ const chartConfig = {
 	},
 } satisfies ChartConfig;
 
-export default function ValorRecebidoAno() {
+export default function ValorRecebidoAno({ recebidoMensal }: { recebidoMensal?: { label: string; value: number }[] }) {
+	const chartConfig = {
+		value: {
+			label: 'Recebido',
+			color: 'hsl(var(--chart-1))',
+		},
+	} satisfies ChartConfig;
+	const chartData = recebidoMensal || [];
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Valor Recebido</CardTitle>
+				<CardTitle>Valor Recebido (até o mês anterior)</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer
@@ -48,25 +55,25 @@ export default function ValorRecebidoAno() {
 						<CartesianGrid vertical={false} />
 						<defs>
 							<linearGradient
-								id='fillDesktop'
+								id='fillValue'
 								x1='0'
 								y1='0'
 								x2='0'
 								y2='1'>
 								<stop
 									offset='5%'
-									stopColor='var(--color-desktop)'
+									stopColor='var(--color-value)'
 									stopOpacity={0.8}
 								/>
 								<stop
 									offset='95%'
-									stopColor='var(--color-desktop)'
+									stopColor='var(--color-value)'
 									stopOpacity={0.2}
 								/>
 							</linearGradient>
 						</defs>
 						<XAxis
-							dataKey='month'
+							dataKey='label'
 							tickLine={false}
 							axisLine={false}
 							tickMargin={8}
@@ -81,13 +88,12 @@ export default function ValorRecebidoAno() {
 								/>
 							}
 						/>
-
 						<Area
-							dataKey='desktop'
+							dataKey='value'
 							type='natural'
-							fill='url(#fillDesktop)'
+							fill='url(#fillValue)'
 							fillOpacity={0.4}
-							stroke='var(--color-desktop)'>
+							stroke='var(--color-value)'>
 							<LabelList
 								position='top'
 								offset={8}

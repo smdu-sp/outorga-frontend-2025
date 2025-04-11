@@ -11,27 +11,19 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from '@/components/ui/chart';
-const chartData = [
-	{ month: 'January', desktop: 186 },
-	{ month: 'February', desktop: 305 },
-	{ month: 'March', desktop: 237 },
-	{ month: 'April', desktop: 73 },
-	{ month: 'May', desktop: 209 },
-	{ month: 'June', desktop: 214 },
-];
 
-const chartConfig = {
-	desktop: {
-		label: 'Valor Projetado',
-		color: 'hsl(var(--chart-1))',
-	},
-} satisfies ChartConfig;
-
-export default function ProgressaoSemestralProjetada() {
+export default function ProgressaoSemestralProjetada({ projecaoMensal }: { projecaoMensal?: { label: string; value: number }[] }) {	
+	const chartConfig = {
+		value: {
+			label: 'Valor Projetado',
+			color: 'hsl(var(--chart-1))',
+		},
+	} satisfies ChartConfig;
+	const chartData = projecaoMensal || [];
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Progressão Projetada</CardTitle>
+				<CardTitle>Progressão Projetada (até o final do ano)</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer
@@ -41,11 +33,11 @@ export default function ProgressaoSemestralProjetada() {
 						accessibilityLayer
 						data={chartData}
 						margin={{
-							top: 20,
+							top: 32
 						}}>
 						<CartesianGrid vertical={false} />
 						<XAxis
-							dataKey='month'
+							dataKey='label'
 							tickLine={false}
 							tickMargin={10}
 							axisLine={false}
@@ -62,8 +54,8 @@ export default function ProgressaoSemestralProjetada() {
 							}
 						/>
 						<Bar
-							dataKey='desktop'
-							fill='var(--color-desktop)'
+							dataKey='value'
+							fill='var(--color-value)'
 							radius={8}>
 							<LabelList
 								position='top'

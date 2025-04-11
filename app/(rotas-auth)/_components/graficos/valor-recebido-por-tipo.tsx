@@ -12,34 +12,27 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from '@/components/ui/chart';
-const chartData = [
-	{ browser: 'PDE', visitors: 275, fill: 'var(--color-chrome)' },
-	{ browser: 'COTA', visitors: 200, fill: 'var(--color-safari)' },
-];
 
-const chartConfig = {
-	visitors: {
-		label: 'Valor Recebido',
-	},
-	chrome: {
-		label: 'Chrome',
-		color: 'hsl(var(--chart-1))',
-	},
-	safari: {
-		label: 'Safari',
-		color: 'hsl(var(--chart-2))',
-	},
-} satisfies ChartConfig;
+const formatter = new Intl.NumberFormat('pt-BR', {
+	style: 'currency',
+	currency: 'BRL',
+});
 
-export default function ValorRecebidoPorTipo() {
-	const totalVisitors = React.useMemo(() => {
-		return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-	}, []);
+export default function ValorRecebidoPorTipo({ valorTipo }: { valorTipo?: { label: string; value: number }[] }) {
+	const chartConfig = {
+		value: {
+			label: 'Quantidade de Processos por Receita',
+			color: 'hsl(var(--chart-1))',
+		},
+	} satisfies ChartConfig;
+	const chartData = valorTipo ? 
+		valorTipo.map((item, index) => ({ label: item.label, value: item.value, fill: `hsl(var(--chart-${index + 1}))` })) : [];
+	const total = valorTipo?.reduce((acc, item) => acc + item.value, 0) || 0;
 
 	return (
 		<Card className='flex flex-col'>
 			<CardHeader className='items-center pb-0'>
-				<CardTitle>Valor Recebido por tipo de Outorga</CardTitle>
+				<CardTitle>Valor Recebido por tipo de receita (PDE/COTA)</CardTitle>
 			</CardHeader>
 			<CardContent className='flex-1 pb-0'>
 				<ChartContainer
@@ -48,17 +41,12 @@ export default function ValorRecebidoPorTipo() {
 					<PieChart>
 						<ChartTooltip
 							cursor={false}
-							content={
-								<ChartTooltipContent
-									hideLabel
-									indicator='line'
-								/>
-							}
+							content={<ChartTooltipContent hideLabel />}
 						/>
 						<Pie
 							data={chartData}
-							dataKey='visitors'
-							nameKey='browser'
+							dataKey='value'
+							nameKey='label'
 							innerRadius={70}
 							outerRadius={100}
 							strokeWidth={5}>
@@ -74,17 +62,14 @@ export default function ValorRecebidoPorTipo() {
 												<tspan
 													x={viewBox.cx}
 													y={viewBox.cy}
-													className='fill-foreground text-2xl font-bold'>
-													{totalVisitors.toLocaleString('pt-br', {
-														style: 'currency',
-														currency: 'brl',
-													})}
+													className='fill-foreground text-md font-bold'>
+													{formatter.format(total)}
 												</tspan>
 												<tspan
 													x={viewBox.cx}
 													y={(viewBox.cy || 0) + 24}
 													className='fill-muted-foreground'>
-													Valor Recebido
+													Total
 												</tspan>
 											</text>
 										);

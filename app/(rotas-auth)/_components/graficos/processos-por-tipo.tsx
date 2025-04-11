@@ -12,34 +12,21 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from '@/components/ui/chart';
-const chartData = [
-	{ browser: 'PDE', visitors: 275, fill: 'var(--color-chrome)' },
-	{ browser: 'COTA', visitors: 200, fill: 'var(--color-safari)' },
-];
 
-const chartConfig = {
-	visitors: {
-		label: 'Valor Recebido',
-	},
-	chrome: {
-		label: 'Chrome',
-		color: 'hsl(var(--chart-1))',
-	},
-	safari: {
-		label: 'Safari',
-		color: 'hsl(var(--chart-2))',
-	},
-} satisfies ChartConfig;
-
-export default function ProcessosPorTipo() {
-	const totalVisitors = React.useMemo(() => {
-		return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-	}, []);
-
+export default function ProcessosPorTipo({ quantidadeTipo }: { quantidadeTipo?: { label: string; value: number }[] }) {
+	const chartConfig = {
+		value: {
+			label: 'Quantidade de Processos por Receita',
+			color: 'hsl(var(--chart-1))',
+		},
+	} satisfies ChartConfig;
+	const chartData = quantidadeTipo ? 
+		quantidadeTipo.map((item, index) => ({ label: item.label, value: item.value, fill: `hsl(var(--chart-${index + 1}))` })) : [];
+	const total = quantidadeTipo?.reduce((acc, item) => acc + item.value, 0) || 0;
 	return (
 		<Card className='flex flex-col'>
 			<CardHeader className='items-center pb-0'>
-				<CardTitle>Processos por tipo de Outorga</CardTitle>
+				<CardTitle>Processos por tipo de receita (PDE/COTA)</CardTitle>
 			</CardHeader>
 			<CardContent className='flex-1 pb-0'>
 				<ChartContainer
@@ -52,8 +39,8 @@ export default function ProcessosPorTipo() {
 						/>
 						<Pie
 							data={chartData}
-							dataKey='visitors'
-							nameKey='browser'
+							dataKey='value'
+							nameKey='label'
 							innerRadius={70}
 							outerRadius={100}
 							strokeWidth={5}>
@@ -70,7 +57,7 @@ export default function ProcessosPorTipo() {
 													x={viewBox.cx}
 													y={viewBox.cy}
 													className='fill-foreground text-3xl font-bold'>
-													{totalVisitors.toLocaleString()}
+													{total.toLocaleString()}
 												</tspan>
 												<tspan
 													x={viewBox.cx}

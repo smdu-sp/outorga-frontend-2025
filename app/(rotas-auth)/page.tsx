@@ -7,6 +7,8 @@ import Report from './_components/report';
 import ValorRecebidoPorTipo from './_components/graficos/valor-recebido-por-tipo';
 import ProcessosPorTipo from './_components/graficos/processos-por-tipo';
 import ProgressaoSemestralProjetada from './_components/graficos/progressao-semestral-projetada';
+import { dashboard } from '@/services/processos';
+import { IDashboard } from '@/types/processo';
 
 export default function HomeSuspense({
 	searchParams,
@@ -26,6 +28,11 @@ async function Home({
 }: {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+	const { data, ok, error, status } = await dashboard();
+	let relatorio: IDashboard | null = null;
+	if (ok) {
+		relatorio = data as IDashboard;
+	}
 	return (
 		<div className='container mx-auto w-full'>
 			<div className='flex flex-col gap-2 mb-5'>
@@ -35,13 +42,13 @@ async function Home({
 				</p>
 			</div>
 			<div className='flex flex-col gap-5 w-full'>
-				<Report />
+				<Report processosTotal={relatorio?.processosTotal} totalRecebido={relatorio?.totalRecebido} totalReceber={relatorio?.totalReceber} />
 				<div className='grid grid-cols-2 gap-5 w-full'>
-					<ValorRecebidoPorTipo />
-					<ProcessosPorTipo />
+					<ValorRecebidoPorTipo valorTipo={relatorio?.valorTipo} />
+					<ProcessosPorTipo quantidadeTipo={relatorio?.quantidadeTipo} />
 				</div>
-				<ProgressaoSemestralProjetada />
-				<ValorRecebidoAno />
+				<ProgressaoSemestralProjetada projecaoMensal={relatorio?.projecaoMensal} />
+				<ValorRecebidoAno recebidoMensal={relatorio?.recebidoMensal} />
 			</div>
 		</div>
 	);
