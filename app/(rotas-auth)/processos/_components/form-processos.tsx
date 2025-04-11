@@ -2,6 +2,13 @@
 
 'use client';
 
+import {
+	calculoParcelas,
+	days,
+	formatCurrency,
+	formatDate,
+	Installment,
+} from '@/app/utils/funcoes-utilitarias';
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -12,6 +19,7 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
 	Select,
 	SelectContent,
@@ -19,11 +27,20 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
+
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableFooter,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { criar } from '@/services/processos';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -38,6 +55,7 @@ const formSchema = z.object({
 	qtd_parcelas: z.number(),
 	vencimento: z.date(),
 	valor_parcela: z.number(),
+	dia_vencimento: z.string(),
 });
 
 export default function FormProcessos() {
@@ -53,10 +71,17 @@ export default function FormProcessos() {
 			qtd_parcelas: 0,
 			valor_parcela: 0,
 			vencimento: new Date(),
+			dia_vencimento: '',
 		},
 	});
 
-	const [parcelasT, setParcelasT] = useState(0);
+	const [parcelasT, setParcelasT] = useState({
+		valorTotal: '',
+		parcelas: '',
+		vencimento: '',
+	});
+
+	const [installment, setInstallment] = useState<Installment[]>([]);
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		const { processo, type, protocolo } = values;
@@ -77,16 +102,34 @@ export default function FormProcessos() {
 		});
 	}
 
-	function gerarParcelas(valor_total: number, qtd_parcelas: number) {
-		setParcelasT(qtd_parcelas);
+	function handleReset() {
+		setParcelasT({
+			parcelas: '',
+			valorTotal: '',
+			vencimento: '',
+		});
+		setInstallment([]);
+
+	}
+
+	function handleGenerate() {
+		const resp = calculoParcelas(
+			parcelasT.valorTotal,
+			parcelasT.parcelas,
+			parcelasT.vencimento,
+		);
+
+		console.log(resp);
+		setInstallment(resp);
+
+		return;
 	}
 
 	return (
 		<Tabs defaultValue='processo'>
-			<TabsList className='grid w-full grid-cols-3'>
+			<TabsList className='grid w-full grid-cols-2'>
 				<TabsTrigger value='processo'>Processo</TabsTrigger>
 				<TabsTrigger value='gerar'>Gerar Parcelas</TabsTrigger>
-				<TabsTrigger value='parcelas'>Parcelas</TabsTrigger>
 			</TabsList>
 
 			<Form {...form}>
@@ -103,6 +146,22 @@ export default function FormProcessos() {
 									<FormControl>
 										<Input
 											placeholder='Digite o número do processo'
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name='cpf_cnpj'
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>CPF/CNPJ</FormLabel>
+									<FormControl>
+										<Input
+											placeholder='Digite o CPF ou CNPJ'
 											{...field}
 										/>
 									</FormControl>
@@ -153,135 +212,136 @@ export default function FormProcessos() {
 					<TabsContent
 						value='gerar'
 						className='space-y-5 mt-2'>
-						<FormField
-							control={form.control}
-							name='valor_total'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Valor Total</FormLabel>
+						<div className='grid grid-cols-3 gap-5'>
+							<div>
+								<Label>Valor Total</Label>
+								<Input
+									type='number'
+									value={parcelasT.valorTotal}
+									onChange={(e) =>
+										setParcelasT((prev) => ({
+											...prev,
+											valorTotal: e.target.value,
+										}))
+									}></Input>
+							</div>
+							<div>
+								<Label>Nº Parcelas</Label>
+								<Input
+									type='number'
+									value={parcelasT.parcelas}
+									onChange={(e) =>
+										setParcelasT((prev) => ({
+											...prev,
+											parcelas: e.target.value,
+										}))
+									}></Input>
+							</div>
+							<div>
+								<Label>Dia de Vencimento</Label>
+								<Select
+									onValueChange={(e) =>
+										setParcelasT((prev) => ({
+											...prev,
+											vencimento: e,
+										}))
+									}
+									value={parcelasT.vencimento}
+									defaultValue={parcelasT.vencimento}>
 									<FormControl>
-										<Input
-											type='number'
-											placeholder='Digite o valor total do processo'
-											{...field}
-										/>
+										<SelectTrigger>
+											<SelectValue placeholder='Selecione o dia' />
+										</SelectTrigger>
 									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name='qtd_parcelas'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Nº de Parcelas</FormLabel>
-									<FormControl>
-										<Input
-											type='number'
-											placeholder='Digite o número de parcelas'
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+									<SelectContent>
+										{days.map((day) => (
+											<SelectItem
+												key={day}
+												value={day}>
+												{day}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
+						</div>
 						<div className='flex items-center gap-5'>
 							<Button
-								onClick={() =>
-									gerarParcelas(
-										form.getValues('valor_total'),
-										form.getValues('qtd_parcelas'),
-									)
+								onClick={() => handleGenerate()}
+								disabled={
+									installment.length > 0 ||
+									!parcelasT.parcelas ||
+									!parcelasT.valorTotal ||
+									!parcelasT.vencimento
 								}
-								disabled={isPending}
 								className='w-full'
 								type='button'>
-								Gerar Agora {isPending && <Loader2 className='animate-spin' />}
+								Gerar {isPending && <Loader2 className='animate-spin' />}
+							</Button>{' '}
+							<Button
+								variant={'destructive'}
+								onClick={() => handleReset()}
+								disabled={parcelasT.parcelas == '' || !parcelasT.parcelas}
+								className='w-full'
+								type='button'>
+								Resetar {isPending && <Loader2 className='animate-spin' />}
 							</Button>
 						</div>
-					</TabsContent>
-					<TabsContent
-						value='parcelas'
-						className='space-y-5 mt-5                            '>
-						{parcelasT == 0 ? (
-							<p className='text-muted-foreground'>Nenhuma parcela gerada</p>
-						) : (
-							<div className='grid grid-cols-5 gap-5'>
-								{Array.from({ length: parcelasT }, (_, index) => {
-									return (
-										<div
-											key={index}
-											className='space-y-3'>
-											<FormField
-												control={form.control}
-												name='cpf_cnpj'
-												render={({ field }) => (
-													<FormItem>
-														<FormLabel>CPF/CNPJ</FormLabel>
-														<FormControl>
-															<Input
-																placeholder='Digite o número do CPF ou CNPJ'
-																{...field}
-															/>
-														</FormControl>
-														<FormMessage />
-													</FormItem>
-												)}
-											/>
-											<FormField
-												control={form.control}
-												name='valor_parcela'
-												render={({ field }) => (
-													<FormItem>
-														<FormLabel>Nº de Parcelas</FormLabel>
-														<FormControl>
-															<Input
-																type='number'
-																placeholder='Digite o número de parcelas'
-																{...field}
-															/>
-														</FormControl>
-														<FormMessage />
-													</FormItem>
-												)}
-											/>
-											<FormField
-												control={form.control}
-												name='vencimento'
-												render={({ field }) => (
-													<FormItem>
-														<FormLabel>Nº de Parcelas</FormLabel>
-														<FormControl>
-															<Input
-																type='date'
-																placeholder='Digite a data de vencimento'
-																{...field}
-																value={
-																	field.value
-																		? field.value.toISOString().split('T')[0]
-																		: ''
-																}
-															/>
-														</FormControl>
-														<FormMessage />
-													</FormItem>
-												)}
-											/>
-											<Separator />
-										</div>
-									);
-								})}
+						{installment.length > 0 && (
+							<div>
+								<Table className='border'>
+									<TableHeader className='bg-primary'>
+										<TableRow>
+											<TableHead className='text-secondary text-center'>
+												#
+											</TableHead>
+											<TableHead className='text-secondary text-center'>
+												Vencimento
+											</TableHead>
+											<TableHead className='text-secondary text-center'>
+												Valor
+											</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										{installment.map((item, index) => {
+											return (
+												<TableRow key={index}>
+													<TableCell className='font-medium text-center'>
+														{item.number}
+													</TableCell>
+													<TableCell className='text-center'>
+														{formatDate(item.dueDate)}
+													</TableCell>
+													<TableCell className='text-center'>
+														{formatCurrency(item.value)}
+													</TableCell>
+												</TableRow>
+											);
+										})}
+									</TableBody>
+									<TableFooter>
+										<TableRow>
+											<TableCell
+												className='text-right'
+												colSpan={2}>
+												Total
+											</TableCell>
+											<TableCell className='text-center'>
+												{formatCurrency(Number(parcelasT.valorTotal))}
+											</TableCell>
+										</TableRow>
+									</TableFooter>
+								</Table>
+								<Button
+									disabled={parcelasT.valorTotal == '' || !parcelasT.valorTotal}
+									className='w-full mt-5'
+									type='button'>
+									Cadastrar <ArrowRight />{' '}
+									{isPending && <Loader2 className='animate-spin' />}
+								</Button>
 							</div>
 						)}
-
-						<Button
-							disabled={isPending}
-							className='w-full'
-							type='submit'>
-							Cadastrar {isPending && <Loader2 className='animate-spin' />}
-						</Button>
 					</TabsContent>
 				</form>
 			</Form>
