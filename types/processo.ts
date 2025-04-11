@@ -30,7 +30,7 @@ export type IProcesso = {
 export interface IRespostaProcesso {
 	ok: boolean;
 	error: string | null;
-	data: IProcessosPaginado | IProcesso[] | null;
+	data: IProcessosPaginado | IProcesso[] | IDashboard | null;
 	status: number;
 }
 
