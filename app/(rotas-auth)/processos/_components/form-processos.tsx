@@ -49,7 +49,7 @@ import { z } from 'zod';
 const formSchema = z.object({
 	processo: z.string(),
 	type: z.enum(['PDE', 'COTA']),
-	cpf_cnpj: z.string(),
+
 	protocolo: z.string().optional(),
 	valor_total: z.number(),
 	qtd_parcelas: z.number(),
@@ -65,7 +65,7 @@ export default function FormProcessos() {
 		defaultValues: {
 			processo: '',
 			type: 'PDE',
-			cpf_cnpj: '',
+
 			protocolo: '',
 			valor_total: 0,
 			qtd_parcelas: 0,
@@ -79,6 +79,7 @@ export default function FormProcessos() {
 		valorTotal: '',
 		parcelas: '',
 		vencimento: '',
+		cpf_cnpj: '',
 	});
 
 	const [installment, setInstallment] = useState<Installment[]>([]);
@@ -107,9 +108,9 @@ export default function FormProcessos() {
 			parcelas: '',
 			valorTotal: '',
 			vencimento: '',
+			cpf_cnpj: '',
 		});
 		setInstallment([]);
-
 	}
 
 	function handleGenerate() {
@@ -153,22 +154,7 @@ export default function FormProcessos() {
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={form.control}
-							name='cpf_cnpj'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>CPF/CNPJ</FormLabel>
-									<FormControl>
-										<Input
-											placeholder='Digite o CPF ou CNPJ'
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+
 						<FormField
 							control={form.control}
 							name='type'
@@ -211,8 +197,8 @@ export default function FormProcessos() {
 					</TabsContent>
 					<TabsContent
 						value='gerar'
-						className='space-y-5 mt-2'>
-						<div className='grid grid-cols-3 gap-5'>
+						className='space-y-4 mt-2'>
+						<div className='grid grid-cols-2 gap-4'>
 							<div>
 								<Label>Valor Total</Label>
 								<Input
@@ -234,6 +220,19 @@ export default function FormProcessos() {
 										setParcelasT((prev) => ({
 											...prev,
 											parcelas: e.target.value,
+										}))
+									}></Input>
+							</div>
+							<div>
+								<Label>CPF/CNPJ</Label>
+								<Input
+									type='text'
+									placeholder='Digite o CPF ou CNPJ'
+									value={parcelasT.cpf_cnpj}
+									onChange={(e) =>
+										setParcelasT((prev) => ({
+											...prev,
+											cpf_cnpj: e.target.value,
 										}))
 									}></Input>
 							</div>
@@ -292,13 +291,16 @@ export default function FormProcessos() {
 								<Table className='border'>
 									<TableHeader className='bg-primary'>
 										<TableRow>
-											<TableHead className='text-secondary text-center'>
+											<TableHead className='text-secondary text-center text-xs'>
 												#
 											</TableHead>
-											<TableHead className='text-secondary text-center'>
+											<TableHead className='text-secondary text-center text-xs'>
 												Vencimento
 											</TableHead>
-											<TableHead className='text-secondary text-center'>
+											<TableHead className='text-secondary text-center text-xs'>
+												CPF/CNPJ
+											</TableHead>
+											<TableHead className='text-secondary text-center text-xs'>
 												Valor
 											</TableHead>
 										</TableRow>
@@ -307,13 +309,16 @@ export default function FormProcessos() {
 										{installment.map((item, index) => {
 											return (
 												<TableRow key={index}>
-													<TableCell className='font-medium text-center'>
+													<TableCell className='font-medium text-center text-xs'>
 														{item.number}
 													</TableCell>
-													<TableCell className='text-center'>
+													<TableCell className='text-center text-xs'>
 														{formatDate(item.dueDate)}
 													</TableCell>
-													<TableCell className='text-center'>
+													<TableCell className='text-center text-xs'>
+														{parcelasT.cpf_cnpj}
+													</TableCell>
+													<TableCell className='text-center text-xs'>
 														{formatCurrency(item.value)}
 													</TableCell>
 												</TableRow>
@@ -324,7 +329,7 @@ export default function FormProcessos() {
 										<TableRow>
 											<TableCell
 												className='text-right'
-												colSpan={2}>
+												colSpan={3}>
 												Total
 											</TableCell>
 											<TableCell className='text-center'>
