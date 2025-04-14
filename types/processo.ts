@@ -12,8 +12,8 @@ export type IParcela = {
 	vencimento: Date;
 	data_quitacao?: Date;
 	ano_pagamento?: number;
-	status_quitacao: boolean;
-	cpf_cnpj?: string;
+	status_quitacao?: boolean;
+	cpf_cnpj: string;
 };
 
 export type IProcesso = {

@@ -16,6 +16,11 @@ export const days = Array.from({ length: 31 }, (_, i) => {
 	return num < 10 ? `0${num}` : `${num}`;
 });
 
+export const parcelasP = Array.from({ length: 10 }, (_, i) => {
+	const num = i + 1;
+	return num;
+});
+
 export interface Installment {
 	number: number;
 	dueDate: Date;
@@ -32,7 +37,7 @@ export const calculoParcelas = (
 	const day = Number.parseInt(diaVencimento);
 
 	// Calculate installment value (rounded to 2 decimal places)
-	const valorParcela = Math.round((total / count) * 100) / 100;
+	const valorParcela = Math.floor((total / count) * 100) / 100;
 
 	console.log({ valorParcela, total, count });
 	// Calculate due dates

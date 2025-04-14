@@ -8,6 +8,7 @@ import {
 	formatCurrency,
 	formatDate,
 	Installment,
+	parcelasP,
 } from '@/app/utils/funcoes-utilitarias';
 import { Button } from '@/components/ui/button';
 import {
@@ -49,7 +50,6 @@ import { z } from 'zod';
 const formSchema = z.object({
 	processo: z.string(),
 	type: z.enum(['PDE', 'COTA']),
-
 	protocolo: z.string().optional(),
 	valor_total: z.number(),
 	qtd_parcelas: z.number(),
@@ -65,7 +65,6 @@ export default function FormProcessos() {
 		defaultValues: {
 			processo: '',
 			type: 'PDE',
-
 			protocolo: '',
 			valor_total: 0,
 			qtd_parcelas: 0,
@@ -119,8 +118,6 @@ export default function FormProcessos() {
 			parcelasT.parcelas,
 			parcelasT.vencimento,
 		);
-
-		console.log(resp);
 		setInstallment(resp);
 
 		return;
@@ -197,12 +194,13 @@ export default function FormProcessos() {
 					</TabsContent>
 					<TabsContent
 						value='gerar'
-						className='space-y-4 mt-2'>
-						<div className='grid grid-cols-2 gap-4'>
+						className='space-y-2 mt-2'>
+						<div className='grid grid-cols-4 gap-3'>
 							<div>
-								<Label>Valor Total</Label>
+								<Label className='text-sm'>Valor Total</Label>
 								<Input
 									type='number'
+									placeholder='Valor total'
 									value={parcelasT.valorTotal}
 									onChange={(e) =>
 										setParcelasT((prev) => ({
@@ -212,19 +210,37 @@ export default function FormProcessos() {
 									}></Input>
 							</div>
 							<div>
-								<Label>Nº Parcelas</Label>
-								<Input
-									type='number'
-									value={parcelasT.parcelas}
-									onChange={(e) =>
+								<Label className='text-sm'>Nº Parcelas</Label>
+								<Select
+									onValueChange={(e) =>
 										setParcelasT((prev) => ({
 											...prev,
-											parcelas: e.target.value,
+											parcelas: e,
 										}))
-									}></Input>
+									}
+									value={parcelasT.parcelas}
+									defaultValue={parcelasT.parcelas}>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue
+												className='text-nowrap text-truncate'
+												placeholder='Parcelas'
+											/>
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										{parcelasP.map((item, index) => (
+											<SelectItem
+												key={index}
+												value={item.toString()}>
+												{item}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
 							</div>
 							<div>
-								<Label>CPF/CNPJ</Label>
+								<Label className='text-sm'>CPF/CNPJ</Label>
 								<Input
 									type='text'
 									placeholder='Digite o CPF ou CNPJ'
@@ -237,7 +253,7 @@ export default function FormProcessos() {
 									}></Input>
 							</div>
 							<div>
-								<Label>Dia de Vencimento</Label>
+								<Label className='text-sm'>Dia de Vencimento</Label>
 								<Select
 									onValueChange={(e) =>
 										setParcelasT((prev) => ({
@@ -249,15 +265,18 @@ export default function FormProcessos() {
 									defaultValue={parcelasT.vencimento}>
 									<FormControl>
 										<SelectTrigger>
-											<SelectValue placeholder='Selecione o dia' />
+											<SelectValue
+												className='text-nowrap text-truncate'
+												placeholder='Vencimento'
+											/>
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{days.map((day) => (
+										{days.map((item, index) => (
 											<SelectItem
-												key={day}
-												value={day}>
-												{day}
+												key={index}
+												value={item.toString()}>
+												{item}
 											</SelectItem>
 										))}
 									</SelectContent>
@@ -266,24 +285,21 @@ export default function FormProcessos() {
 						</div>
 						<div className='flex items-center gap-5'>
 							<Button
+								disabled={isPending}
+								size={'sm'}
 								onClick={() => handleGenerate()}
-								disabled={
-									installment.length > 0 ||
-									!parcelasT.parcelas ||
-									!parcelasT.valorTotal ||
-									!parcelasT.vencimento
-								}
 								className='w-full'
 								type='button'>
-								Gerar {isPending && <Loader2 className='animate-spin' />}
+								Gerar
 							</Button>{' '}
 							<Button
+								size={'sm'}
 								variant={'destructive'}
 								onClick={() => handleReset()}
 								disabled={parcelasT.parcelas == '' || !parcelasT.parcelas}
 								className='w-full'
 								type='button'>
-								Resetar {isPending && <Loader2 className='animate-spin' />}
+								Resetar
 							</Button>
 						</div>
 						{installment.length > 0 && (
